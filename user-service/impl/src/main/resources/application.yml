@@ -1,0 +1,21 @@
+server:
+  port: ${PORT_TO_EXPOSE:8050}
+  forward-headers-strategy: framework
+  servlet:
+    context-path: "/user-service"
+
+spring:
+  data:
+    web:
+      pageable:
+        max-page-size: 10000
+  application:
+    name: "user-service"
+  mail:
+    host: smtp.yandex.ru
+    port: 25
+    sender:
+      username: "citydiscover"
+      email: "citydiscover@yandex.ru"
+      password: "xatjlojxvseswgjg"
+    protocol: "smtp"
