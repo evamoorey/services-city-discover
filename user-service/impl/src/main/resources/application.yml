@@ -5,15 +5,26 @@ server:
     context-path: "/user-service"
 
 spring:
+  liquibase:
+    change-log: classpath:src/main/resources/db.changelog/master.xml
+    enabled: true
+  datasource:
+    url: "jdbc:postgresql://localhost:5432/user_info"
+    username: postgres
+    password: postgres
+    hikari:
+      driver-class-name: org.postgresql.Driver
+
   data:
     web:
       pageable:
         max-page-size: 10000
   application:
     name: "user-service"
+
   mail:
     host: smtp.yandex.ru
-    port: 25
+    port: 465
     sender:
       username: "citydiscover"
       email: "citydiscover@yandex.ru"

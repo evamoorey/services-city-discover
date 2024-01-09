@@ -27,6 +27,8 @@ public class EmailProperties {
         prop.put("mail.smtp.host", host);
         prop.put("mail.smtp.port", port);
         prop.put("mail.protocol", protocol);
+//        prop.put("mail.debug", "true");
+        prop.put("mail.smtp.ssl.enable", "true");
 
         return prop;
     }
