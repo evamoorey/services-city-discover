@@ -19,11 +19,9 @@ import org.jooq.SelectField;
 import org.jooq.Table;
 import org.jooq.TableField;
 import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
-import org.user_service.domain.jooq.Keys;
 import org.user_service.domain.jooq.Public;
 import org.user_service.domain.jooq.tables.records.AuthCodeRecord;
 
@@ -101,11 +99,6 @@ public class AuthCode extends TableImpl<AuthCodeRecord> {
     @Override
     public Schema getSchema() {
         return aliased() ? null : Public.PUBLIC;
-    }
-
-    @Override
-    public UniqueKey<AuthCodeRecord> getPrimaryKey() {
-        return Keys.PK_AUTH_CODE_EMAIL;
     }
 
     @Override

@@ -7,10 +7,9 @@ package org.user_service.domain.jooq.tables.records;
 import java.time.Instant;
 
 import org.jooq.Field;
-import org.jooq.Record1;
 import org.jooq.Record3;
 import org.jooq.Row3;
-import org.jooq.impl.UpdatableRecordImpl;
+import org.jooq.impl.TableRecordImpl;
 import org.user_service.domain.jooq.tables.AuthCode;
 
 
@@ -18,7 +17,7 @@ import org.user_service.domain.jooq.tables.AuthCode;
  * User's disposable codes for auth
  */
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
-public class AuthCodeRecord extends UpdatableRecordImpl<AuthCodeRecord> implements Record3<String, String, Instant> {
+public class AuthCodeRecord extends TableRecordImpl<AuthCodeRecord> implements Record3<String, String, Instant> {
 
     private static final long serialVersionUID = 1L;
 
@@ -64,15 +63,6 @@ public class AuthCodeRecord extends UpdatableRecordImpl<AuthCodeRecord> implemen
      */
     public Instant getCreationDate() {
         return (Instant) get(2);
-    }
-
-    // -------------------------------------------------------------------------
-    // Primary key information
-    // -------------------------------------------------------------------------
-
-    @Override
-    public Record1<String> key() {
-        return (Record1) super.key();
     }
 
     // -------------------------------------------------------------------------
