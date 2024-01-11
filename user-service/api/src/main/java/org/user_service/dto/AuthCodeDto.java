@@ -5,15 +5,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserCreateDto {
+public class AuthCodeDto {
 
-    @NotBlank(message = "Email должен быть заполнен")
+    @NotBlank
     private String email;
 
-    @NotBlank(message = "Имя пользователя должно быть заполнено")
-    private String username;
+    @NotBlank
+    private String code;
 }
