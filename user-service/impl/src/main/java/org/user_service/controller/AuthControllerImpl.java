@@ -8,7 +8,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RestController;
 import org.user_service.dto.AuthCodeDto;
 import org.user_service.dto.UserCreateDto;
-import org.user_service.dto.wrapper.ErrorDto;
+import org.user_service.dto.error.EmailErrorDto;
 import org.user_service.dto.wrapper.ErrorsMap;
 import org.user_service.service.AuthService;
 
@@ -24,21 +24,26 @@ public class AuthControllerImpl implements AuthController {
 
     @Override
     public ResponseEntity<?> create(UserCreateDto userCreateDto, BindingResult bindingResult) {
-        return null;
+        if (bindingResult.hasErrors()) {
+            ErrorsMap errorsMap = getErrorsMap(bindingResult);
+            log.info("Errors in input dto for create user: [{}]", errorsMap);
+            return ResponseEntity.badRequest().body(errorsMap);
+        }
+
+        if (!isValidEmail(userCreateDto.getEmail())) {
+            return new ResponseEntity<>(new EmailErrorDto(), HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(true, HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity<?> sendCode(String email) {
         if (!isValidEmail(email)) {
-            ErrorDto errorDto = new ErrorDto();
-            errorDto.setCode("400");
-            errorDto.setMessage("Invalid email address");
-            return new ResponseEntity<>(errorDto, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new EmailErrorDto(), HttpStatus.BAD_REQUEST);
         }
 
-        log.info("Send auth code to: {}", email);
         authService.sendEmailCode(email);
-
         return new ResponseEntity<>(true, HttpStatus.OK);
     }
 
@@ -46,18 +51,9 @@ public class AuthControllerImpl implements AuthController {
     public ResponseEntity<?> checkCode(AuthCodeDto authCodeDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             ErrorsMap errorsMap = getErrorsMap(bindingResult);
-            log.info("Errors in input dto for check code {}", errorsMap);
+            log.info("Errors in input dto for check code: [{}]", errorsMap);
             return ResponseEntity.badRequest().body(errorsMap);
         }
-
-        if (!isValidEmail(authCodeDto.getEmail())) {
-            ErrorDto errorDto = new ErrorDto();
-            errorDto.setCode("400");
-            errorDto.setMessage("Invalid email address");
-            return new ResponseEntity<>(errorDto, HttpStatus.BAD_REQUEST);
-        }
-
-        log.info("Check auth code for: {}", authCodeDto.getEmail());
 
         return new ResponseEntity<>(authService.checkEmailCode(authCodeDto), HttpStatus.OK);
     }

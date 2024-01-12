@@ -2,11 +2,13 @@ package org.user_service.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.user_service.constants.ControllerUrls;
 import org.user_service.dto.AuthCodeDto;
 import org.user_service.dto.UserCreateDto;
@@ -26,5 +28,5 @@ public interface AuthController {
 
     @GetMapping(path = ControllerUrls.CODE_URL)
     @Operation(summary = "Проверка корректности кода авторизации")
-    ResponseEntity<?> checkCode(@RequestBody @Valid AuthCodeDto authCodeDto, BindingResult bindingResult);
+    ResponseEntity<?> checkCode(@RequestBody @Validated AuthCodeDto authCodeDto, BindingResult bindingResult);
 }
