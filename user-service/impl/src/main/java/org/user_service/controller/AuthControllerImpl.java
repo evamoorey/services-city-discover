@@ -26,7 +26,6 @@ public class AuthControllerImpl implements AuthController {
     public ResponseEntity<?> create(UserCreateDto userCreateDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             ErrorsMap errorsMap = getErrorsMap(bindingResult);
-            log.info("Errors in input dto for create user: [{}]", errorsMap);
             return ResponseEntity.badRequest().body(errorsMap);
         }
 
@@ -51,7 +50,6 @@ public class AuthControllerImpl implements AuthController {
     public ResponseEntity<?> checkCode(AuthCodeDto authCodeDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             ErrorsMap errorsMap = getErrorsMap(bindingResult);
-            log.info("Errors in input dto for check code: [{}]", errorsMap);
             return ResponseEntity.badRequest().body(errorsMap);
         }
 
