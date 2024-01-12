@@ -5,11 +5,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.user_service.dto.AuthCodeDto;
 import org.user_service.entity.AuthCodeEntity;
+import org.user_service.exception.NoSuchEntityException;
+import org.user_service.exception.TooMuchRequestsException;
 import org.user_service.repository.AuthCodeRepository;
 import org.user_service.service.AuthService;
 import org.user_service.service.EmailService;
 
 import java.time.Instant;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 import static org.user_service.utill.RandomGenerator.generateCode;
@@ -30,6 +33,16 @@ public class AuthServiceImpl implements AuthService {
         String authCode = generateCode(MIN_NUM, MAX_NUM);
         AuthCodeEntity entity = new AuthCodeEntity(email, authCode, Instant.now());
 
+        Optional<AuthCodeEntity> current = authCodeRepository.findByEmail(email);
+        if (current.isPresent()) {
+            if (current.get().getCreationDate().plus(2, TimeUnit.MINUTES.toChronoUnit())
+                    .isAfter(Instant.now())) {
+                log.error("User with email [{}] already has code", email);
+                throw new TooMuchRequestsException("User with email [%s] already has code".formatted(email));
+            }
+            authCodeRepository.deleteAllCodes(entity.getEmail());
+        }
+
         authCodeRepository.insert(entity);
         emailService.sendMessage(email, authCode);
     }
@@ -39,10 +52,17 @@ public class AuthServiceImpl implements AuthService {
         String email = authCodeDto.getEmail();
         String code = authCodeDto.getCode();
 
-        AuthCodeEntity entity = authCodeRepository.findByEmail(email);
-        authCodeRepository.delete(entity);
+        AuthCodeEntity entity = authCodeRepository.findByEmail(email)
+                .orElseThrow(() -> {
+                    log.error("No such codes for email: [{}]", email);
+                    return new NoSuchEntityException("No such codes for email: [%s]".formatted(email));
+                });
 
-        return entity.getCode().equals(code) &&
-                entity.getCreationDate().plus(5, TimeUnit.MINUTES.toChronoUnit()).isAfter(Instant.now());
+        if (entity.getCode().equals(code) &&
+                entity.getCreationDate().plus(10, TimeUnit.MINUTES.toChronoUnit()).isAfter(Instant.now())) {
+            authCodeRepository.deleteAllCodes(entity.getEmail());
+            return true;
+        }
+        return false;
     }
 }

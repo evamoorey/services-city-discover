@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.user_service.dto.wrapper.ErrorDto;
 import org.user_service.dto.wrapper.ResponseWrappedDto;
 import org.user_service.exception.NoSuchEntityException;
+import org.user_service.exception.TooMuchRequestsException;
 
 import java.util.Collections;
 
@@ -21,7 +22,7 @@ public class DefaultAdvice {
         this.errorList = errorList;
     }
 
-    @ExceptionHandler({NoSuchEntityException.class})
+    @ExceptionHandler({NoSuchEntityException.class, TooMuchRequestsException.class})
     public ResponseEntity<?> handleException(RuntimeException e) {
         ResponseWrappedDto responseWrappedDto = buildResponseWrappedDtoFromException(e);
 

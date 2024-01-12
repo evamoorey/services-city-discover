@@ -2,10 +2,12 @@ package org.user_service.repository;
 
 import org.user_service.entity.AuthCodeEntity;
 
+import java.util.Optional;
+
 public interface AuthCodeRepository {
-    AuthCodeEntity insert(AuthCodeEntity entity);
+    void insert(AuthCodeEntity entity);
 
-    AuthCodeEntity findByEmail(String email);
+    Optional<AuthCodeEntity> findByEmail(String email);
 
-    void delete(AuthCodeEntity entity);
+    void deleteAllCodes(String email);
 }
