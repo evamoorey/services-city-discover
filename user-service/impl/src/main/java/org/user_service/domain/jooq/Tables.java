@@ -5,6 +5,7 @@ package org.user_service.domain.jooq;
 
 
 import org.user_service.domain.jooq.tables.AuthCode;
+import org.user_service.domain.jooq.tables.Token;
 import org.user_service.domain.jooq.tables.User;
 
 
@@ -18,6 +19,11 @@ public class Tables {
      * User's disposable codes for auth
      */
     public static final AuthCode AUTH_CODE = AuthCode.AUTH_CODE;
+
+    /**
+     * User's token
+     */
+    public static final Token TOKEN = Token.TOKEN;
 
     /**
      * User's info

@@ -32,3 +32,6 @@ spring:
       email: "citydiscover@yandex.ru"
       password: "xatjlojxvseswgjg"
     protocol: "smtp"
+
+jwt:
+  secret: "uR2djMIlRYULTTvgMdQMFkil5Ecg3qauWYfVbw0jQyTYx0a1Lm2bW9"

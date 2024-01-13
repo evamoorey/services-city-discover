@@ -10,18 +10,17 @@
                 <constraints primaryKey="true" primaryKeyName="pk_user_uuid"/>
             </column>
 
-            <column name="username" type="varchar" remarks="Username">
-                <constraints nullable="false"/>
-            </column>
-
             <column name="email" type="varchar" remarks="User email">
                 <constraints nullable="false"/>
             </column>
+
+            <column name="username" type="varchar" remarks="Username"/>
 
             <column name="creation_date" type="timestamp with time zone"
                     defaultValueComputed="${datatype.date.currentTimestamp}" remarks="Code creation time">
                 <constraints nullable="false"/>
             </column>
+
         </createTable>
     </changeSet>
 

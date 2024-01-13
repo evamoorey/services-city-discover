@@ -11,6 +11,7 @@ import org.jooq.Catalog;
 import org.jooq.Table;
 import org.jooq.impl.SchemaImpl;
 import org.user_service.domain.jooq.tables.AuthCode;
+import org.user_service.domain.jooq.tables.Token;
 import org.user_service.domain.jooq.tables.User;
 
 
@@ -31,6 +32,11 @@ public class Public extends SchemaImpl {
      * User's disposable codes for auth
      */
     public final AuthCode AUTH_CODE = AuthCode.AUTH_CODE;
+
+    /**
+     * User's token
+     */
+    public final Token TOKEN = Token.TOKEN;
 
     /**
      * User's info
@@ -54,6 +60,7 @@ public class Public extends SchemaImpl {
     public final List<Table<?>> getTables() {
         return Arrays.asList(
             AuthCode.AUTH_CODE,
+            Token.TOKEN,
             User.USER
         );
     }

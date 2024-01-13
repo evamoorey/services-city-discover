@@ -1,9 +1,10 @@
 package org.user_service.service;
 
 import org.user_service.dto.AuthCodeDto;
+import org.user_service.dto.TokenDto;
 
 public interface AuthService {
     void sendEmailCode(String email);
 
-    boolean checkEmailCode(AuthCodeDto authCodeDto);
+    TokenDto login(AuthCodeDto authCodeDto);
 }

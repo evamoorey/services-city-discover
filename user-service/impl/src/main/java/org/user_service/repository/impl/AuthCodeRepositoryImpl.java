@@ -35,7 +35,6 @@ public class AuthCodeRepositoryImpl implements AuthCodeRepository {
     public Optional<AuthCodeEntity> findByEmail(String email) {
         return dsl.selectFrom(AUTH_CODE)
                 .where(AUTH_CODE.EMAIL.eq(email))
-                .orderBy(AUTH_CODE.CREATION_DATE.desc())
                 .fetchOptionalInto(AuthCodeEntity.class);
     }
 

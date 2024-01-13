@@ -56,14 +56,14 @@ public class User extends TableImpl<UserRecord> {
     public final TableField<UserRecord, UUID> ID = createField(DSL.name("id"), SQLDataType.UUID.nullable(false).defaultValue(DSL.field(DSL.raw("gen_random_uuid()"), SQLDataType.UUID)), this, "User id");
 
     /**
-     * The column <code>public.user.username</code>. Username
-     */
-    public final TableField<UserRecord, String> USERNAME = createField(DSL.name("username"), SQLDataType.VARCHAR.nullable(false), this, "Username");
-
-    /**
      * The column <code>public.user.email</code>. User email
      */
     public final TableField<UserRecord, String> EMAIL = createField(DSL.name("email"), SQLDataType.VARCHAR.nullable(false), this, "User email");
+
+    /**
+     * The column <code>public.user.username</code>. Username
+     */
+    public final TableField<UserRecord, String> USERNAME = createField(DSL.name("username"), SQLDataType.VARCHAR, this, "Username");
 
     /**
      * The column <code>public.user.creation_date</code>. Code creation time

@@ -5,12 +5,14 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.time.Instant;
+import java.util.UUID;
 
 @Data
 @AllArgsConstructor
 @Builder
-public class AuthCodeEntity {
+public class UserEntity {
+    private UUID id;
     private String email;
-    private String code;
+    private String username;
     private Instant creationDate;
 }

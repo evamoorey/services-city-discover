@@ -10,23 +10,31 @@ import org.user_service.dto.wrapper.ErrorDto;
 import org.user_service.dto.wrapper.ResponseWrappedDto;
 import org.user_service.exception.NoSuchEntityException;
 import org.user_service.exception.TooMuchRequestsException;
+import org.user_service.exception.UnauthorizedException;
 
 import java.util.Collections;
 
 @RestControllerAdvice
 @Slf4j
-public class DefaultAdvice {
+public class ExceptionAdvice {
     private final ErrorList errorList;
 
-    public DefaultAdvice(ErrorList errorList) {
+    public ExceptionAdvice(ErrorList errorList) {
         this.errorList = errorList;
     }
 
     @ExceptionHandler({NoSuchEntityException.class, TooMuchRequestsException.class})
-    public ResponseEntity<?> handleException(RuntimeException e) {
+    public ResponseEntity<?> handleBadRequestException(RuntimeException e) {
         ResponseWrappedDto responseWrappedDto = buildResponseWrappedDtoFromException(e);
 
         return new ResponseEntity<>(responseWrappedDto, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({UnauthorizedException.class})
+    public ResponseEntity<?> handleUnauthorizedException(RuntimeException e) {
+        ResponseWrappedDto responseWrappedDto = buildResponseWrappedDtoFromException(e);
+
+        return new ResponseEntity<>(responseWrappedDto, HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler({DataAccessException.class})

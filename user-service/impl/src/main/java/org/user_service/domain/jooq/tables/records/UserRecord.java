@@ -38,30 +38,30 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> implements Recor
     }
 
     /**
-     * Setter for <code>public.user.username</code>. Username
-     */
-    public void setUsername(String value) {
-        set(1, value);
-    }
-
-    /**
-     * Getter for <code>public.user.username</code>. Username
-     */
-    public String getUsername() {
-        return (String) get(1);
-    }
-
-    /**
      * Setter for <code>public.user.email</code>. User email
      */
     public void setEmail(String value) {
-        set(2, value);
+        set(1, value);
     }
 
     /**
      * Getter for <code>public.user.email</code>. User email
      */
     public String getEmail() {
+        return (String) get(1);
+    }
+
+    /**
+     * Setter for <code>public.user.username</code>. Username
+     */
+    public void setUsername(String value) {
+        set(2, value);
+    }
+
+    /**
+     * Getter for <code>public.user.username</code>. Username
+     */
+    public String getUsername() {
         return (String) get(2);
     }
 
@@ -109,12 +109,12 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> implements Recor
 
     @Override
     public Field<String> field2() {
-        return User.USER.USERNAME;
+        return User.USER.EMAIL;
     }
 
     @Override
     public Field<String> field3() {
-        return User.USER.EMAIL;
+        return User.USER.USERNAME;
     }
 
     @Override
@@ -129,12 +129,12 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> implements Recor
 
     @Override
     public String component2() {
-        return getUsername();
+        return getEmail();
     }
 
     @Override
     public String component3() {
-        return getEmail();
+        return getUsername();
     }
 
     @Override
@@ -149,12 +149,12 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> implements Recor
 
     @Override
     public String value2() {
-        return getUsername();
+        return getEmail();
     }
 
     @Override
     public String value3() {
-        return getEmail();
+        return getUsername();
     }
 
     @Override
@@ -170,13 +170,13 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> implements Recor
 
     @Override
     public UserRecord value2(String value) {
-        setUsername(value);
+        setEmail(value);
         return this;
     }
 
     @Override
     public UserRecord value3(String value) {
-        setEmail(value);
+        setUsername(value);
         return this;
     }
 
@@ -209,12 +209,12 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> implements Recor
     /**
      * Create a detached, initialised UserRecord
      */
-    public UserRecord(UUID id, String username, String email, Instant creationDate) {
+    public UserRecord(UUID id, String email, String username, Instant creationDate) {
         super(User.USER);
 
         setId(id);
-        setUsername(username);
         setEmail(email);
+        setUsername(username);
         setCreationDate(creationDate);
         resetChangedOnNotNull();
     }

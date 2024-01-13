@@ -4,11 +4,14 @@
 package org.user_service.domain.jooq;
 
 
+import org.jooq.ForeignKey;
 import org.jooq.TableField;
 import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
 import org.jooq.impl.Internal;
+import org.user_service.domain.jooq.tables.Token;
 import org.user_service.domain.jooq.tables.User;
+import org.user_service.domain.jooq.tables.records.TokenRecord;
 import org.user_service.domain.jooq.tables.records.UserRecord;
 
 
@@ -24,4 +27,10 @@ public class Keys {
     // -------------------------------------------------------------------------
 
     public static final UniqueKey<UserRecord> PK_USER_UUID = Internal.createUniqueKey(User.USER, DSL.name("pk_user_uuid"), new TableField[] { User.USER.ID }, true);
+
+    // -------------------------------------------------------------------------
+    // FOREIGN KEY definitions
+    // -------------------------------------------------------------------------
+
+    public static final ForeignKey<TokenRecord, UserRecord> TOKEN__FK_TOKEN_USER_ID = Internal.createForeignKey(Token.TOKEN, DSL.name("fk_token_user_id"), new TableField[] { Token.TOKEN.USER_ID }, Keys.PK_USER_UUID, new TableField[] { User.USER.ID }, true);
 }

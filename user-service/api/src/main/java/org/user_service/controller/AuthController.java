@@ -22,11 +22,11 @@ public interface AuthController {
     ResponseEntity<?> create(@RequestBody @Validated UserCreateDto userCreateDto,
                              BindingResult bindingResult);
 
-    @PostMapping(path = ControllerUrls.CODE_URL)
+    @PostMapping(path = ControllerUrls.LOGIN_CODE_URL)
     @Operation(summary = "Отправка кода на почту")
     ResponseEntity<?> sendCode(@RequestParam(value = "email") String email);
 
-    @GetMapping(path = ControllerUrls.CODE_URL)
-    @Operation(summary = "Проверка корректности кода авторизации")
-    ResponseEntity<?> checkCode(@RequestBody @Validated AuthCodeDto authCodeDto, BindingResult bindingResult);
+    @GetMapping(path = ControllerUrls.LOGIN_URL)
+    @Operation(summary = "Логин пользователя")
+    ResponseEntity<?> login(@RequestBody @Validated AuthCodeDto authCodeDto, BindingResult bindingResult);
 }

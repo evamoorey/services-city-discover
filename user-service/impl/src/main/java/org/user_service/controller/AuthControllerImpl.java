@@ -47,12 +47,12 @@ public class AuthControllerImpl implements AuthController {
     }
 
     @Override
-    public ResponseEntity<?> checkCode(AuthCodeDto authCodeDto, BindingResult bindingResult) {
+    public ResponseEntity<?> login(AuthCodeDto authCodeDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             ErrorsMap errorsMap = getErrorsMap(bindingResult);
             return ResponseEntity.badRequest().body(errorsMap);
         }
 
-        return new ResponseEntity<>(authService.checkEmailCode(authCodeDto), HttpStatus.OK);
+        return new ResponseEntity<>(authService.login(authCodeDto), HttpStatus.OK);
     }
 }
