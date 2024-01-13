@@ -45,6 +45,7 @@ public class TokenServiceImpl implements TokenService {
                 .refreshToken(refresh)
                 .build();
 
+        tokenRepository.deleteAllTokens(id);
         tokenRepository.insert(token);
         return new TokenDto(access, refresh);
     }
