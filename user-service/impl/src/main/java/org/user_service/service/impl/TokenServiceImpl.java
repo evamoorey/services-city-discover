@@ -41,14 +41,20 @@ public class TokenServiceImpl implements TokenService {
                 .expiration(Date.from(timeNow.plus(15L, ChronoUnit.MINUTES)))
                 .signWith(key)
                 .compact();
-        String refresh = String.valueOf(UUID.randomUUID());
+        String refresh = Jwts.builder()
+                .id(UUID.randomUUID().toString())
+                .subject(String.valueOf(id))
+                .issuedAt(Date.from(timeNow))
+                .expiration(Date.from(timeNow.plus(24L, ChronoUnit.HOURS)))
+                .signWith(key)
+                .compact();
 
         TokenEntity token = TokenEntity.builder()
                 .userId(id)
                 .refreshToken(refresh)
                 .build();
 
-        tokenRepository.deleteAllTokens(id);
+        tokenRepository.deleteTokenByUserId(id);
         tokenRepository.insert(token);
         return new TokenDto(access, refresh);
     }
@@ -67,5 +73,18 @@ public class TokenServiceImpl implements TokenService {
             log.error("Could not verify JWT token");
             throw new UnauthorizedException("Could not verify JWT token");
         }
+    }
+
+    @Override
+    public TokenEntity findByUserId(UUID userId) {
+        return tokenRepository.findById(userId).orElseThrow(() -> {
+            log.error("No such tokens for user: [{}]", userId);
+            return new UnauthorizedException("No such tokens for user: [%s]".formatted(userId));
+        });
+    }
+
+    @Override
+    public void deleteByUserId(UUID userId) {
+        tokenRepository.deleteTokenByUserId(userId);
     }
 }

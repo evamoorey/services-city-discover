@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import org.user_service.dto.AuthCodeDto;
 import org.user_service.dto.TokenDto;
 import org.user_service.entity.AuthCodeEntity;
-import org.user_service.exception.NoSuchEntityException;
+import org.user_service.entity.TokenEntity;
 import org.user_service.exception.TooMuchRequestsException;
 import org.user_service.exception.UnauthorizedException;
 import org.user_service.repository.AuthCodeRepository;
@@ -21,6 +21,7 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import static org.user_service.utill.RandomGenerator.generateCode;
+import static org.user_service.utill.TokenUtil.getUserFromToken;
 
 @Service
 @Slf4j
@@ -65,7 +66,7 @@ public class AuthServiceImpl implements AuthService {
         AuthCodeEntity authCode = authCodeRepository.findByEmail(email)
                 .orElseThrow(() -> {
                     log.error("No such codes for email: [{}]", email);
-                    return new NoSuchEntityException("No such codes for email: [%s]".formatted(email));
+                    return new UnauthorizedException("No such codes for email: [%s]".formatted(email));
                 });
 
         checkAuthCode(authCode, code);
@@ -73,6 +74,21 @@ public class AuthServiceImpl implements AuthService {
         authCodeRepository.deleteAllCodes(authCode.getEmail());
         UUID userId = userService.create(authCode.getEmail());
         return tokenService.create(userId);
+    }
+
+    @Override
+    public TokenDto refresh(String refresh) {
+        tokenService.verifyToken(refresh);
+
+        UUID userId = getUserFromToken(refresh);
+        TokenEntity token = tokenService.findByUserId(userId);
+
+        if (token.getRefreshToken().equals(refresh)) {
+            return tokenService.create(userId);
+        }
+
+        tokenService.deleteByUserId(userId);
+        throw new UnauthorizedException("Incorrect refresh token");
     }
 
     private static void checkAuthCode(AuthCodeEntity entity, String code) {

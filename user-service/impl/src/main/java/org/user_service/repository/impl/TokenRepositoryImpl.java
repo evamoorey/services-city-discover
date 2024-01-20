@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import org.user_service.entity.TokenEntity;
 import org.user_service.repository.TokenRepository;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.user_service.domain.jooq.tables.Token.TOKEN;
@@ -32,7 +33,7 @@ public class TokenRepositoryImpl implements TokenRepository {
     }
 
     @Override
-    public void deleteAllTokens(UUID userId) {
+    public void deleteTokenByUserId(UUID userId) {
         try {
             dsl.deleteFrom(TOKEN)
                     .where(TOKEN.USER_ID.eq(userId))
@@ -41,5 +42,12 @@ public class TokenRepositoryImpl implements TokenRepository {
             log.error("Error delete tokens for user id: [{}]", userId);
             throw new DataAccessException("Error delete tokens for user id: [%s]".formatted(userId));
         }
+    }
+
+    @Override
+    public Optional<TokenEntity> findById(UUID userId) {
+        return dsl.selectFrom(TOKEN)
+                .where(TOKEN.USER_ID.eq(userId))
+                .fetchOptionalInto(TokenEntity.class);
     }
 }

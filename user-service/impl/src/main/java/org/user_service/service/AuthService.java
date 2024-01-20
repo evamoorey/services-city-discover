@@ -7,4 +7,6 @@ public interface AuthService {
     void sendEmailCode(String email);
 
     TokenDto login(AuthCodeDto authCodeDto);
+
+    TokenDto refresh(String refresh);
 }

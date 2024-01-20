@@ -23,4 +23,8 @@ public interface AuthController {
     @GetMapping(path = ControllerUrls.LOGIN_URL)
     @Operation(summary = "Логин пользователя")
     ResponseEntity<?> login(@RequestBody @Validated AuthCodeDto authCodeDto, BindingResult bindingResult);
+
+    @GetMapping(path = ControllerUrls.REFRESH_URL)
+    @Operation(summary = "Рефреш токена")
+    ResponseEntity<?> refresh(@RequestParam(value = "refresh") String refresh);
 }

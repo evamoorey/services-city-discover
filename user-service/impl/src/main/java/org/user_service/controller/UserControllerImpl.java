@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RestController;
+import org.user_service.dto.UserDto;
 import org.user_service.dto.UserUpdateDto;
 import org.user_service.dto.wrapper.ErrorsMap;
 import org.user_service.service.UserService;
@@ -31,8 +32,8 @@ public class UserControllerImpl implements UserController {
         }
 
         UUID userId = UUID.fromString((String) request.getAttribute("id"));
-        userService.update(userId, userUpdateDto);
+        UserDto user = userService.update(userId, userUpdateDto);
 
-        return new ResponseEntity<>(true, HttpStatus.OK);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 }
