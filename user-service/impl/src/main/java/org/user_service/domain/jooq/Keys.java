@@ -27,6 +27,8 @@ public class Keys {
     // -------------------------------------------------------------------------
 
     public static final UniqueKey<UserRecord> PK_USER_UUID = Internal.createUniqueKey(User.USER, DSL.name("pk_user_uuid"), new TableField[] { User.USER.ID }, true);
+    public static final UniqueKey<UserRecord> UNIQUE_USER_EMAIL = Internal.createUniqueKey(User.USER, DSL.name("unique_user_email"), new TableField[] { User.USER.EMAIL }, true);
+    public static final UniqueKey<UserRecord> UNIQUE_USER_USERNAME = Internal.createUniqueKey(User.USER, DSL.name("unique_user_username"), new TableField[] { User.USER.USERNAME }, true);
 
     // -------------------------------------------------------------------------
     // FOREIGN KEY definitions

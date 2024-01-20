@@ -9,10 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserCreateDto {
-
-    @NotBlank(message = "Email должен быть заполнен")
-    private String email;
+public class UserUpdateDto {
 
     @NotBlank(message = "Имя пользователя должно быть заполнено")
     private String username;

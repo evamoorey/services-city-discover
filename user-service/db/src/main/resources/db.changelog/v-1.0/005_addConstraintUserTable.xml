@@ -1,0 +1,15 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+    <changeSet id="4" author="e.galyuta">
+        <addUniqueConstraint tableName="user"
+                             columnNames="email"
+                             constraintName="unique_user_email"/>
+        <addUniqueConstraint tableName="user"
+                             columnNames="username"
+                             constraintName="unique_user_username"/>
+    </changeSet>
+
+</databaseChangeLog>

@@ -9,6 +9,7 @@ import org.user_service.entity.UserEntity;
 import org.user_service.repository.UserRepository;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.user_service.domain.jooq.tables.User.USER;
 
@@ -32,9 +33,31 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
+    public UserEntity update(UserEntity entity) {
+        try {
+            return dsl.update(USER)
+                    .set(dsl.newRecord(USER, entity))
+                    .returning()
+                    .fetchOptional()
+                    .orElseThrow(() -> new DataAccessException("Error updating user with email: [%s].".formatted(entity.getEmail())))
+                    .into(UserEntity.class);
+        } catch (Exception e) {
+            log.error("Error updating user with email: [{}]", entity.getEmail());
+            throw new DataAccessException("Error updating user with email: [%s]".formatted(entity.getEmail()));
+        }
+    }
+
+    @Override
     public Optional<UserEntity> findByEmail(String email) {
         return dsl.selectFrom(USER)
                 .where(USER.EMAIL.eq(email))
+                .fetchOptionalInto(UserEntity.class);
+    }
+
+    @Override
+    public Optional<UserEntity> findById(UUID id) {
+        return dsl.selectFrom(USER)
+                .where(USER.ID.eq(id))
                 .fetchOptionalInto(UserEntity.class);
     }
 }

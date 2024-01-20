@@ -5,6 +5,8 @@ package org.user_service.domain.jooq.tables;
 
 
 import java.time.Instant;
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 import java.util.function.Function;
 
@@ -111,6 +113,11 @@ public class User extends TableImpl<UserRecord> {
     @Override
     public UniqueKey<UserRecord> getPrimaryKey() {
         return Keys.PK_USER_UUID;
+    }
+
+    @Override
+    public List<UniqueKey<UserRecord>> getUniqueKeys() {
+        return Arrays.asList(Keys.UNIQUE_USER_EMAIL, Keys.UNIQUE_USER_USERNAME);
     }
 
     @Override

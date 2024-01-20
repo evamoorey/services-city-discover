@@ -9,5 +9,6 @@
     <include file="002_addAuthCodeTable.xml" relativeToChangelogFile="true"/>
     <include file="003_addUserTable.xml" relativeToChangelogFile="true"/>
     <include file="004_addTokenTable.xml" relativeToChangelogFile="true"/>
+    <include file="005_addConstraintUserTable.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>
