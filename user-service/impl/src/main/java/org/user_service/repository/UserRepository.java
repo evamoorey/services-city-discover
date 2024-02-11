@@ -6,11 +6,13 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface UserRepository {
-    void insert(UserEntity entity);
+    UserEntity insert(UserEntity entity);
 
     UserEntity update(UserEntity entity);
 
     Optional<UserEntity> findByEmail(String email);
 
     Optional<UserEntity> findById(UUID id);
+
+    Optional<UserEntity> findByUsername(String username);
 }

@@ -45,7 +45,7 @@ public class TokenServiceImpl implements TokenService {
                 .id(UUID.randomUUID().toString())
                 .subject(String.valueOf(id))
                 .issuedAt(Date.from(timeNow))
-                .expiration(Date.from(timeNow.plus(1L, ChronoUnit.MONTHS)))
+                .expiration(Date.from(timeNow.plus(30L, ChronoUnit.DAYS)))
                 .signWith(key)
                 .compact();
 

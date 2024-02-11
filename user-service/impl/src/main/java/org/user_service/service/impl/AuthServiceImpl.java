@@ -5,6 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.user_service.dto.AuthCodeDto;
 import org.user_service.dto.TokenDto;
+import org.user_service.dto.TokenUserDto;
+import org.user_service.dto.UserDto;
 import org.user_service.entity.AuthCodeEntity;
 import org.user_service.entity.TokenEntity;
 import org.user_service.exception.TooMuchRequestsException;
@@ -59,7 +61,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public TokenDto login(AuthCodeDto authCodeDto) {
+    public TokenUserDto login(AuthCodeDto authCodeDto) {
         String email = authCodeDto.getEmail();
         String code = authCodeDto.getCode();
 
@@ -70,10 +72,11 @@ public class AuthServiceImpl implements AuthService {
                 });
 
         checkAuthCode(authCode, code);
-
         authCodeRepository.deleteAllCodes(authCode.getEmail());
-        UUID userId = userService.create(authCode.getEmail());
-        return tokenService.create(userId);
+
+        UserDto user = userService.create(authCode.getEmail());
+        TokenDto tokens = tokenService.create(user.getId());
+        return new TokenUserDto(user, tokens);
     }
 
     @Override

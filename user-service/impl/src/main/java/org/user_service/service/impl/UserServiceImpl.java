@@ -8,6 +8,7 @@ import org.user_service.dto.UserDto;
 import org.user_service.dto.UserUpdateDto;
 import org.user_service.entity.UserEntity;
 import org.user_service.exception.NoSuchEntityException;
+import org.user_service.exception.NotUniqueException;
 import org.user_service.repository.UserRepository;
 import org.user_service.service.UserService;
 
@@ -23,10 +24,10 @@ public class UserServiceImpl implements UserService {
     private final ModelMapper modelMapper;
 
     @Override
-    public UUID create(String email) {
+    public UserDto create(String email) {
         Optional<UserEntity> user = userRepository.findByEmail(email);
         if (user.isPresent()) {
-            return user.get().getId();
+            return modelMapper.map(user.get(), UserDto.class);
         }
 
         UUID userId = UUID.randomUUID();
@@ -35,12 +36,14 @@ public class UserServiceImpl implements UserService {
                 .email(email)
                 .build();
 
-        userRepository.insert(newUser);
-        return userId;
+        UserEntity inserted = userRepository.insert(newUser);
+        return modelMapper.map(inserted, UserDto.class);
     }
 
     @Override
     public UserDto update(UUID id, UserUpdateDto userUpdateDto) {
+        checkUsername(userUpdateDto.getUsername());
+
         UserEntity user = userRepository.findById(id).orElseThrow(() -> {
             log.error("No such user with id: [{}]", id);
             return new NoSuchEntityException("No such user with id: [%s]".formatted(id));
@@ -57,6 +60,15 @@ public class UserServiceImpl implements UserService {
         }
 
         return modelMapper.map(user, UserDto.class);
+    }
+
+    private void checkUsername(String username) {
+        Optional<UserEntity> user = userRepository.findByUsername(username);
+
+        if (user.isPresent()) {
+            log.error("Username is taken by another user");
+            throw new NotUniqueException("Username is taken by another user");
+        }
     }
 
     private boolean equalHashes(UserEntity userFromDb, UserEntity updatedUser) {

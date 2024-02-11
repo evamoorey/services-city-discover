@@ -7,7 +7,7 @@ import org.user_service.dto.UserUpdateDto;
 import java.util.UUID;
 
 public interface UserService {
-    UUID create(String email);
+    UserDto create(String email);
 
     UserDto update(UUID id, UserUpdateDto userUpdateDto);
 }

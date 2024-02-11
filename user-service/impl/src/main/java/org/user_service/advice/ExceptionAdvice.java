@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.user_service.dto.wrapper.ErrorDto;
 import org.user_service.dto.wrapper.ResponseWrappedDto;
 import org.user_service.exception.NoSuchEntityException;
+import org.user_service.exception.NotUniqueException;
 import org.user_service.exception.TooMuchRequestsException;
 import org.user_service.exception.UnauthorizedException;
 
@@ -23,7 +24,7 @@ public class ExceptionAdvice {
         this.errorList = errorList;
     }
 
-    @ExceptionHandler({NoSuchEntityException.class, TooMuchRequestsException.class})
+    @ExceptionHandler({NoSuchEntityException.class, TooMuchRequestsException.class, NotUniqueException.class})
     public ResponseEntity<?> handleBadRequestException(RuntimeException e) {
         ResponseWrappedDto responseWrappedDto = buildResponseWrappedDtoFromException(e);
 
@@ -45,9 +46,6 @@ public class ExceptionAdvice {
     }
 
     private ResponseWrappedDto buildResponseWrappedDtoFromException(RuntimeException e) {
-        log.info("Exception '{}' is handled. Message: '{}'.",
-                e.getClass().getName(),
-                e.getMessage());
 
         ErrorDto errorDto = new ErrorDto();
         errorDto.setCode("ERROR");

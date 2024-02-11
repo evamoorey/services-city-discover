@@ -21,15 +21,13 @@ public class UserRepositoryImpl implements UserRepository {
     private final DSLContext dsl;
 
     @Override
-    public void insert(UserEntity entity) {
-        try {
-            dsl.insertInto(USER)
-                    .set(dsl.newRecord(USER, entity))
-                    .execute();
-        } catch (Exception e) {
-            log.error("Error inserting user with email: [{}]", entity.getEmail());
-            throw new DataAccessException("Error inserting user with email: [%s]".formatted(entity.getEmail()));
-        }
+    public UserEntity insert(UserEntity entity) {
+        return dsl.insertInto(USER)
+                .set(dsl.newRecord(USER, entity))
+                .returning()
+                .fetchOptional()
+                .orElseThrow(() -> new DataAccessException("Error inserting user with email: [%s]".formatted(entity.getEmail())))
+                .into(UserEntity.class);
     }
 
     @Override
@@ -58,6 +56,13 @@ public class UserRepositoryImpl implements UserRepository {
     public Optional<UserEntity> findById(UUID id) {
         return dsl.selectFrom(USER)
                 .where(USER.ID.eq(id))
+                .fetchOptionalInto(UserEntity.class);
+    }
+
+    @Override
+    public Optional<UserEntity> findByUsername(String username) {
+        return dsl.selectFrom(USER)
+                .where(USER.USERNAME.eq(username))
                 .fetchOptionalInto(UserEntity.class);
     }
 }

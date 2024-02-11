@@ -20,7 +20,7 @@ public interface AuthController {
     @Operation(summary = "Отправка кода на почту")
     ResponseEntity<?> sendCode(@RequestParam(value = "email") String email);
 
-    @GetMapping(path = ControllerUrls.LOGIN_URL)
+    @PostMapping(path = ControllerUrls.LOGIN_URL)
     @Operation(summary = "Логин пользователя")
     ResponseEntity<?> login(@RequestBody @Validated AuthCodeDto authCodeDto, BindingResult bindingResult);
 

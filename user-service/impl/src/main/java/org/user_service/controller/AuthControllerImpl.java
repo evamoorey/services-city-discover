@@ -9,6 +9,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RestController;
 import org.user_service.dto.AuthCodeDto;
 import org.user_service.dto.TokenDto;
+import org.user_service.dto.TokenUserDto;
 import org.user_service.dto.error.EmailErrorDto;
 import org.user_service.dto.wrapper.ErrorsMap;
 import org.user_service.service.AuthService;
@@ -42,9 +43,9 @@ public class AuthControllerImpl implements AuthController {
             return ResponseEntity.badRequest().body(errorsMap);
         }
 
-        TokenDto tokens = authService.login(authCodeDto);
+        TokenUserDto tokenUserDto = authService.login(authCodeDto);
 
-        return new ResponseEntity<>(tokens, HttpStatus.OK);
+        return new ResponseEntity<>(tokenUserDto, HttpStatus.OK);
     }
 
     @Override
