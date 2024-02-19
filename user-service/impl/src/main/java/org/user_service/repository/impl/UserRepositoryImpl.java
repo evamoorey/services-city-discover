@@ -26,7 +26,8 @@ public class UserRepositoryImpl implements UserRepository {
                 .set(dsl.newRecord(USER, entity))
                 .returning()
                 .fetchOptional()
-                .orElseThrow(() -> new DataAccessException("Error inserting user with email: [%s]".formatted(entity.getEmail())))
+                .orElseThrow(() -> new DataAccessException("Error inserting user with email: [%s]"
+                        .formatted(entity.getEmail())))
                 .into(UserEntity.class);
     }
 
@@ -37,7 +38,8 @@ public class UserRepositoryImpl implements UserRepository {
                     .set(dsl.newRecord(USER, entity))
                     .returning()
                     .fetchOptional()
-                    .orElseThrow(() -> new DataAccessException("Error updating user with email: [%s].".formatted(entity.getEmail())))
+                    .orElseThrow(() -> new DataAccessException("Error updating user with email: [%s]."
+                            .formatted(entity.getEmail())))
                     .into(UserEntity.class);
         } catch (Exception e) {
             log.error("Error updating user with email: [{}]", entity.getEmail());
@@ -64,5 +66,12 @@ public class UserRepositoryImpl implements UserRepository {
         return dsl.selectFrom(USER)
                 .where(USER.USERNAME.eq(username))
                 .fetchOptionalInto(UserEntity.class);
+    }
+
+    @Override
+    public void delete(UUID id) {
+        dsl.deleteFrom(USER)
+                .where(USER.ID.eq(id))
+                .execute();
     }
 }

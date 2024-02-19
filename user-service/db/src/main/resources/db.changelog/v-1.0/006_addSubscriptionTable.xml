@@ -1,0 +1,20 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+    <changeSet id="5" author="e.galyuta">
+        <createTable tableName="subscription" remarks="Subscriptions">
+
+            <column name="subscriber_id" type="${uuid_type}" remarks="Subscriber id">
+                <constraints foreignKeyName="fk_subscriber_user_id" references="user(id)"/>
+            </column>
+
+            <column name="publisher_id" type="${uuid_type}" remarks="Publisher id">
+                <constraints foreignKeyName="fk_publisher_user_id" references="user(id)"/>
+            </column>
+
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>

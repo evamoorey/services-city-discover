@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RestController;
 import org.user_service.dto.UserDto;
+import org.user_service.dto.UserPublicDto;
 import org.user_service.dto.UserUpdateDto;
 import org.user_service.dto.wrapper.ErrorsMap;
 import org.user_service.service.UserService;
@@ -35,5 +36,28 @@ public class UserControllerImpl implements UserController {
         UserDto user = userService.update(userId, userUpdateDto);
 
         return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<UserDto> findInfo() {
+        UUID userId = UUID.fromString((String) request.getAttribute("id"));
+        UserDto user = userService.findPrivateBy(userId);
+
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<UserPublicDto> findById(UUID id) {
+        UserPublicDto user = userService.findBy(id);
+
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<Boolean> delete() {
+        UUID userId = UUID.fromString((String) request.getAttribute("id"));
+        userService.delete(userId);
+
+        return new ResponseEntity<>(true, HttpStatus.OK);
     }
 }

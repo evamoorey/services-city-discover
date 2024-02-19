@@ -40,11 +40,9 @@ public class SecurityConfig extends OncePerRequestFilter {
         try {
             if (!checkWhitelabelURI(request.getRequestURI())) {
                 String authorization = request.getHeader("Authorization");
-
                 tokenService.verifyToken(authorization);
 
                 Object userId = getUserFromToken(authorization);
-
                 request.setAttribute("id", userId);
             }
 
@@ -56,6 +54,6 @@ public class SecurityConfig extends OncePerRequestFilter {
     }
 
     private boolean checkWhitelabelURI(String requestURI) {
-        return whitelistURI.contains(requestURI);
+        return whitelistURI.stream().anyMatch(requestURI::contains);
     }
 }

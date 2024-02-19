@@ -9,8 +9,10 @@ import org.jooq.TableField;
 import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
 import org.jooq.impl.Internal;
+import org.user_service.domain.jooq.tables.Subscription;
 import org.user_service.domain.jooq.tables.Token;
 import org.user_service.domain.jooq.tables.User;
+import org.user_service.domain.jooq.tables.records.SubscriptionRecord;
 import org.user_service.domain.jooq.tables.records.TokenRecord;
 import org.user_service.domain.jooq.tables.records.UserRecord;
 
@@ -34,5 +36,7 @@ public class Keys {
     // FOREIGN KEY definitions
     // -------------------------------------------------------------------------
 
+    public static final ForeignKey<SubscriptionRecord, UserRecord> SUBSCRIPTION__FK_PUBLISHER_USER_ID = Internal.createForeignKey(Subscription.SUBSCRIPTION, DSL.name("fk_publisher_user_id"), new TableField[] { Subscription.SUBSCRIPTION.PUBLISHER_ID }, Keys.PK_USER_UUID, new TableField[] { User.USER.ID }, true);
+    public static final ForeignKey<SubscriptionRecord, UserRecord> SUBSCRIPTION__FK_SUBSCRIBER_USER_ID = Internal.createForeignKey(Subscription.SUBSCRIPTION, DSL.name("fk_subscriber_user_id"), new TableField[] { Subscription.SUBSCRIPTION.SUBSCRIBER_ID }, Keys.PK_USER_UUID, new TableField[] { User.USER.ID }, true);
     public static final ForeignKey<TokenRecord, UserRecord> TOKEN__FK_TOKEN_USER_ID = Internal.createForeignKey(Token.TOKEN, DSL.name("fk_token_user_id"), new TableField[] { Token.TOKEN.USER_ID }, Keys.PK_USER_UUID, new TableField[] { User.USER.ID }, true);
 }

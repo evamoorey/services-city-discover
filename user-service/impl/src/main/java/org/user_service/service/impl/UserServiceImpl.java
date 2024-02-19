@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.user_service.dto.UserDto;
+import org.user_service.dto.UserPublicDto;
 import org.user_service.dto.UserUpdateDto;
 import org.user_service.entity.UserEntity;
 import org.user_service.exception.NoSuchEntityException;
@@ -60,6 +61,31 @@ public class UserServiceImpl implements UserService {
         }
 
         return modelMapper.map(user, UserDto.class);
+    }
+
+    @Override
+    public UserDto findPrivateBy(UUID id) {
+        UserEntity user = userRepository.findById(id).orElseThrow(() -> {
+            log.error("No such user with id: [{}]", id);
+            return new NoSuchEntityException("No such user with id: [%s]".formatted(id));
+        });
+
+        return modelMapper.map(user, UserDto.class);
+    }
+
+    @Override
+    public UserPublicDto findBy(UUID id) {
+        UserEntity user = userRepository.findById(id).orElseThrow(() -> {
+            log.error("No such user with id: [{}]", id);
+            return new NoSuchEntityException("No such user with id: [%s]".formatted(id));
+        });
+
+        return modelMapper.map(user, UserPublicDto.class);
+    }
+
+    @Override
+    public void delete(UUID userId) {
+        userRepository.delete(userId);
     }
 
     private void checkUsername(String username) {

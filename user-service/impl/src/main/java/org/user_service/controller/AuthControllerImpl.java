@@ -1,6 +1,5 @@
 package org.user_service.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -23,7 +22,6 @@ import static org.user_service.utill.EmailChecker.isValidEmail;
 public class AuthControllerImpl implements AuthController {
 
     private final AuthService authService;
-    private final HttpServletRequest request;
 
     @Override
     public ResponseEntity<?> sendCode(String email) {

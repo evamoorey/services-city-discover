@@ -10,5 +10,6 @@
     <include file="003_addUserTable.xml" relativeToChangelogFile="true"/>
     <include file="004_addTokenTable.xml" relativeToChangelogFile="true"/>
     <include file="005_addConstraintUserTable.xml" relativeToChangelogFile="true"/>
+    <include file="006_addSubscriptionTable.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

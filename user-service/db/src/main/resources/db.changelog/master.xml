@@ -6,6 +6,7 @@
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
 
     <property name="uuid_type" value="uuid" dbms="postgresql" />
+    <property name="uuid_array" value="uuid[]" dbms="postgresql" />
     <property name="uuid_function" value="gen_random_uuid()" dbms="postgresql" />
     <property name="datatype.date.currentTimestamp" value="CURRENT_TIMESTAMP" dbms="postgresql" />
 
