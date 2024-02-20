@@ -31,12 +31,18 @@ public class SecurityConfig extends OncePerRequestFilter {
             "/user-service/auth/login",
             "/user-service/auth/refresh");
 
+    private static final String swaggerURI = "/user-service/swagger-ui";
+
     public SecurityConfig(TokenService tokenService) {
         this.tokenService = tokenService;
     }
 
     @Override
     protected void doFilterInternal(@NotNull HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) {
+        if (checkSwaggerURI(request.getRequestURI())) {
+            return;
+        }
+
         try {
             if (!checkWhitelabelURI(request.getRequestURI())) {
                 String authorization = request.getHeader("Authorization");
@@ -55,5 +61,9 @@ public class SecurityConfig extends OncePerRequestFilter {
 
     private boolean checkWhitelabelURI(String requestURI) {
         return whitelistURI.stream().anyMatch(requestURI::contains);
+    }
+
+    private boolean checkSwaggerURI(String requestURI) {
+        return requestURI.contains(swaggerURI);
     }
 }

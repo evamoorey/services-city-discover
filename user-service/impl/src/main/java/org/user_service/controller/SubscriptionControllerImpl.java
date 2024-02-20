@@ -3,9 +3,12 @@ package org.user_service.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
+import org.user_service.dto.SubscriptionDto;
 import org.user_service.service.SubscriptionService;
 
 import java.util.UUID;
@@ -32,5 +35,19 @@ public class SubscriptionControllerImpl implements SubscriptionController {
         subscriptionService.unsubscribe(subscriber, id);
 
         return new ResponseEntity<>(true, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<Page<SubscriptionDto>> findSubscribers(UUID id, Pageable pageable) {
+        Page<SubscriptionDto> subscribers = subscriptionService.findSubscribers(id, pageable);
+
+        return new ResponseEntity<>(subscribers, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<Page<SubscriptionDto>> findSubscriptions(UUID id, Pageable pageable) {
+        Page<SubscriptionDto> subscribers = subscriptionService.findSubscriptions(id, pageable);
+
+        return new ResponseEntity<>(subscribers, HttpStatus.OK);
     }
 }
