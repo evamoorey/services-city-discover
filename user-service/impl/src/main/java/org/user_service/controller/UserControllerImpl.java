@@ -32,8 +32,7 @@ public class UserControllerImpl implements UserController {
             return ResponseEntity.badRequest().body(errorsMap);
         }
 
-//        UUID userId = UUID.fromString((String) request.getAttribute("id"));
-        UUID userId = UUID.fromString("4545dab7-a42e-4f00-b0b6-0cd559515ce4");
+        UUID userId = UUID.fromString((String) request.getAttribute("id"));
         UserDto user = userService.update(userId, userUpdateDto);
 
         return new ResponseEntity<>(user, HttpStatus.OK);

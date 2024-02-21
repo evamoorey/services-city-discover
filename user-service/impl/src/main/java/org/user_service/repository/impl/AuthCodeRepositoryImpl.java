@@ -27,7 +27,7 @@ public class AuthCodeRepositoryImpl implements AuthCodeRepository {
                     .execute();
         } catch (Exception e) {
             log.error("Error inserting code with email: [{}]", entity.getEmail());
-            throw new DataAccessException("Error inserting code with email: [%s]".formatted(entity.getEmail()));
+            throw new DataAccessException("Ошибка записи кода для пользователя: [%s]".formatted(entity.getEmail()));
         }
     }
 
@@ -46,7 +46,7 @@ public class AuthCodeRepositoryImpl implements AuthCodeRepository {
                     .execute();
         } catch (Exception e) {
             log.error("Error delete codes for user with email: [{}]", email);
-            throw new DataAccessException("Error delete codes for user with email: [%s]".formatted(email));
+            throw new DataAccessException("Ошибка при удалении кодов авторизации пользователя: [%s]".formatted(email));
         }
     }
 }

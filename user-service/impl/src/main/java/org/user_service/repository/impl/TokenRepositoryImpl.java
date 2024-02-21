@@ -28,7 +28,7 @@ public class TokenRepositoryImpl implements TokenRepository {
                     .execute();
         } catch (Exception e) {
             log.error("Error inserting refresh with user id: [{}]", entity.getUserId());
-            throw new DataAccessException("Error inserting refresh with user id: [%s]".formatted(entity.getUserId()));
+            throw new DataAccessException("Ошибка записи refresh токена");
         }
     }
 
@@ -40,7 +40,7 @@ public class TokenRepositoryImpl implements TokenRepository {
                     .execute();
         } catch (Exception e) {
             log.error("Error delete tokens for user id: [{}]", userId);
-            throw new DataAccessException("Error delete tokens for user id: [%s]".formatted(userId));
+            throw new DataAccessException("Ошибка при удалении токенов пользователя");
         }
     }
 

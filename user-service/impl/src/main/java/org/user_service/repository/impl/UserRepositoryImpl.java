@@ -26,26 +26,27 @@ public class UserRepositoryImpl implements UserRepository {
                 .set(dsl.newRecord(USER, entity))
                 .returning()
                 .fetchOptional()
-                .orElseThrow(() -> new DataAccessException("Error inserting user with email: [%s]"
-                        .formatted(entity.getEmail())))
+                .orElseThrow(() -> {
+                    log.error("Error inserting user with email: [{}]", entity.getEmail());
+                    return new DataAccessException("Ошибка при добавлении пользователя с email: [%s]"
+                            .formatted(entity.getEmail()));
+                })
                 .into(UserEntity.class);
     }
 
     @Override
     public UserEntity update(UserEntity entity) {
-        try {
-            return dsl.update(USER)
-                    .set(dsl.newRecord(USER, entity))
-                    .where(USER.ID.eq(entity.getId()))
-                    .returning()
-                    .fetchOptional()
-                    .orElseThrow(() -> new DataAccessException("Error updating user with email: [%s]."
-                            .formatted(entity.getEmail())))
-                    .into(UserEntity.class);
-        } catch (Exception e) {
-            log.error("Error updating user with email: [{}]", entity.getEmail());
-            throw new DataAccessException("Error updating user with email: [%s]".formatted(entity.getEmail()));
-        }
+        return dsl.update(USER)
+                .set(dsl.newRecord(USER, entity))
+                .where(USER.ID.eq(entity.getId()))
+                .returning()
+                .fetchOptional()
+                .orElseThrow(() -> {
+                    log.error("Error updating user with email: [{}]", entity.getEmail());
+                    return new DataAccessException("Ошибка при обновлении пользователя с email: [%s]."
+                            .formatted(entity.getEmail()));
+                })
+                .into(UserEntity.class);
     }
 
     @Override

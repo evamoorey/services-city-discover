@@ -33,8 +33,10 @@ public class SubscriptionRepositoryImpl implements SubscriptionRepository {
                 .set(SUBSCRIPTION.PUBLISHER_ID, entity.getPublisher())
                 .returning()
                 .fetchOptional()
-                .orElseThrow(() -> new DataAccessException("Error inserting user subscription: [%s]"
-                        .formatted(entity.getSubscriber())))
+                .orElseThrow(() -> {
+                    log.error("Error inserting user subscription: [{}]", entity.getSubscriber());
+                    return new DataAccessException("Ошибка при подписке на другого пользователя");
+                })
                 .into(SubscriptionEntity.class);
     }
 

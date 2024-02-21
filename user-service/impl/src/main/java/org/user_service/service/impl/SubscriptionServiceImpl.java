@@ -2,7 +2,6 @@ package org.user_service.service.impl;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -23,7 +22,6 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
     private final SubscriptionRepository subscriptionRepository;
     private final UserService userService;
-    private final ModelMapper modelMapper;
 
     @Override
     public void subscribe(UUID subscriber, UUID publisher) {
@@ -33,7 +31,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         Optional<SubscriptionEntity> subscription = subscriptionRepository.findBy(subscriber, publisher);
         if (subscription.isPresent()) {
             log.error("User [{}] already subscribed on [{}]", subscriber, publisher);
-            throw new UnprocessableActionException("User already subscribed");
+            throw new UnprocessableActionException("Подписка на пользователя уже есть");
         }
 
         SubscriptionEntity entity = SubscriptionEntity.builder()
@@ -51,7 +49,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
         subscriptionRepository.findBy(subscriber, publisher).orElseThrow(() -> {
             log.error("User [{}] not subscribed on [{}]", subscriber, publisher);
-            return new UnprocessableActionException("User not subscribed");
+            return new UnprocessableActionException("Нет подписки на пользователя");
         });
 
         subscriptionRepository.deleteBy(subscriber, publisher);

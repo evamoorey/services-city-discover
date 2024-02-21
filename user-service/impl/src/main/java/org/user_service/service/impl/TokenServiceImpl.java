@@ -71,7 +71,7 @@ public class TokenServiceImpl implements TokenService {
             jwtParser.parse(token);
         } catch (Exception e) {
             log.error("Could not verify JWT token");
-            throw new UnauthorizedException("Could not verify JWT token");
+            throw new UnauthorizedException("Невозможно валидировать JWT token");
         }
     }
 
@@ -79,7 +79,7 @@ public class TokenServiceImpl implements TokenService {
     public TokenEntity findByUserId(UUID userId) {
         return tokenRepository.findById(userId).orElseThrow(() -> {
             log.error("No such tokens for user: [{}]", userId);
-            return new UnauthorizedException("No such tokens for user: [%s]".formatted(userId));
+            return new UnauthorizedException("Нет токенов для пользователя");
         });
     }
 

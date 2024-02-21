@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService {
 
         UserEntity user = userRepository.findById(id).orElseThrow(() -> {
             log.error("No such user with id: [{}]", id);
-            return new NoSuchEntityException("No such user with id: [%s]".formatted(id));
+            return new NoSuchEntityException("Пользователь не существует");
         });
 
         UserEntity toUpdate = modelMapper.map(userUpdateDto, UserEntity.class);
@@ -67,7 +67,7 @@ public class UserServiceImpl implements UserService {
     public UserDto findPrivateBy(UUID id) {
         UserEntity user = userRepository.findById(id).orElseThrow(() -> {
             log.error("No such user with id: [{}]", id);
-            return new NoSuchEntityException("No such user with id: [%s]".formatted(id));
+            return new NoSuchEntityException("Пользователь не существует");
         });
 
         return modelMapper.map(user, UserDto.class);
@@ -77,7 +77,7 @@ public class UserServiceImpl implements UserService {
     public UserPublicDto findBy(UUID id) {
         UserEntity user = userRepository.findById(id).orElseThrow(() -> {
             log.error("No such user with id: [{}]", id);
-            return new NoSuchEntityException("No such user with id: [%s]".formatted(id));
+            return new NoSuchEntityException("Пользователь не существует");
         });
 
         return modelMapper.map(user, UserPublicDto.class);
@@ -93,7 +93,7 @@ public class UserServiceImpl implements UserService {
 
         if (user.isPresent()) {
             log.error("Username is taken by another user");
-            throw new NotUniqueException("Username is taken by another user");
+            throw new NotUniqueException("Username уже используется другим пользователем");
         }
     }
 

@@ -51,7 +51,7 @@ public class AuthServiceImpl implements AuthService {
             if (current.get().getCreationDate().plus(2, TimeUnit.MINUTES.toChronoUnit())
                     .isAfter(Instant.now())) {
                 log.error("User with email [{}] already has code", email);
-                throw new TooMuchRequestsException("User with email [%s] already has code".formatted(email));
+                throw new TooMuchRequestsException("Код для авторизации уже отправлен");
             }
             authCodeRepository.deleteAllCodes(authCode.getEmail());
         }
@@ -68,7 +68,7 @@ public class AuthServiceImpl implements AuthService {
         AuthCodeEntity authCode = authCodeRepository.findByEmail(email)
                 .orElseThrow(() -> {
                     log.error("No such codes for email: [{}]", email);
-                    return new UnauthorizedException("No such codes for email: [%s]".formatted(email));
+                    return new UnauthorizedException("Нет активных кодов для авторизации");
                 });
 
         checkAuthCode(authCode, code);
@@ -91,7 +91,9 @@ public class AuthServiceImpl implements AuthService {
         }
 
         tokenService.deleteByUserId(userId);
-        throw new UnauthorizedException("Incorrect refresh token");
+
+        log.error("Incorrect refresh token");
+        throw new UnauthorizedException("Refresh token не валиден");
     }
 
     private static void checkAuthCode(AuthCodeEntity entity, String code) {
@@ -100,7 +102,7 @@ public class AuthServiceImpl implements AuthService {
         if (!entity.getCode().equals(code) ||
                 entity.getCreationDate().plus(10, TimeUnit.MINUTES.toChronoUnit()).isBefore(Instant.now())) {
             log.error("Incorrect code for email: [{}]", email);
-            throw new UnauthorizedException("Incorrect code for email: [%s]".formatted(email));
+            throw new UnauthorizedException("Код некорректный");
         }
     }
 }
