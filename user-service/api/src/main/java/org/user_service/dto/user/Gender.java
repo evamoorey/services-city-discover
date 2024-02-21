@@ -8,8 +8,8 @@ import lombok.Getter;
 @AllArgsConstructor
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum Gender {
-    FEMALE("Female"),
-    MALE("Male");
+    FEMALE("Женский"),
+    MALE("Мужской");
 
     public String getCode() {
         return this.name();
