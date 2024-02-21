@@ -36,6 +36,7 @@ public class UserRepositoryImpl implements UserRepository {
         try {
             return dsl.update(USER)
                     .set(dsl.newRecord(USER, entity))
+                    .where(USER.ID.eq(entity.getId()))
                     .returning()
                     .fetchOptional()
                     .orElseThrow(() -> new DataAccessException("Error updating user with email: [%s]."

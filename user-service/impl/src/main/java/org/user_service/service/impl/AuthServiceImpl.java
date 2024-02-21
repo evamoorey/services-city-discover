@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import org.user_service.dto.AuthCodeDto;
 import org.user_service.dto.TokenDto;
 import org.user_service.dto.TokenUserDto;
-import org.user_service.dto.UserDto;
+import org.user_service.dto.user.UserDto;
 import org.user_service.entity.AuthCodeEntity;
 import org.user_service.entity.TokenEntity;
 import org.user_service.exception.TooMuchRequestsException;

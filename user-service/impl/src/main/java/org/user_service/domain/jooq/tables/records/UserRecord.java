@@ -9,8 +9,8 @@ import java.util.UUID;
 
 import org.jooq.Field;
 import org.jooq.Record1;
-import org.jooq.Record4;
-import org.jooq.Row4;
+import org.jooq.Record6;
+import org.jooq.Row6;
 import org.jooq.impl.UpdatableRecordImpl;
 import org.user_service.domain.jooq.tables.User;
 
@@ -19,7 +19,7 @@ import org.user_service.domain.jooq.tables.User;
  * User's info
  */
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
-public class UserRecord extends UpdatableRecordImpl<UserRecord> implements Record4<UUID, String, String, Instant> {
+public class UserRecord extends UpdatableRecordImpl<UserRecord> implements Record6<UUID, String, String, Instant, String, Integer> {
 
     private static final long serialVersionUID = 1L;
 
@@ -79,6 +79,34 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> implements Recor
         return (Instant) get(3);
     }
 
+    /**
+     * Setter for <code>public.user.gender</code>. User gender
+     */
+    public void setGender(String value) {
+        set(4, value);
+    }
+
+    /**
+     * Getter for <code>public.user.gender</code>. User gender
+     */
+    public String getGender() {
+        return (String) get(4);
+    }
+
+    /**
+     * Setter for <code>public.user.age</code>. User age
+     */
+    public void setAge(Integer value) {
+        set(5, value);
+    }
+
+    /**
+     * Getter for <code>public.user.age</code>. User age
+     */
+    public Integer getAge() {
+        return (Integer) get(5);
+    }
+
     // -------------------------------------------------------------------------
     // Primary key information
     // -------------------------------------------------------------------------
@@ -89,17 +117,17 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> implements Recor
     }
 
     // -------------------------------------------------------------------------
-    // Record4 type implementation
+    // Record6 type implementation
     // -------------------------------------------------------------------------
 
     @Override
-    public Row4<UUID, String, String, Instant> fieldsRow() {
-        return (Row4) super.fieldsRow();
+    public Row6<UUID, String, String, Instant, String, Integer> fieldsRow() {
+        return (Row6) super.fieldsRow();
     }
 
     @Override
-    public Row4<UUID, String, String, Instant> valuesRow() {
-        return (Row4) super.valuesRow();
+    public Row6<UUID, String, String, Instant, String, Integer> valuesRow() {
+        return (Row6) super.valuesRow();
     }
 
     @Override
@@ -123,6 +151,16 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> implements Recor
     }
 
     @Override
+    public Field<String> field5() {
+        return User.USER.GENDER;
+    }
+
+    @Override
+    public Field<Integer> field6() {
+        return User.USER.AGE;
+    }
+
+    @Override
     public UUID component1() {
         return getId();
     }
@@ -143,6 +181,16 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> implements Recor
     }
 
     @Override
+    public String component5() {
+        return getGender();
+    }
+
+    @Override
+    public Integer component6() {
+        return getAge();
+    }
+
+    @Override
     public UUID value1() {
         return getId();
     }
@@ -160,6 +208,16 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> implements Recor
     @Override
     public Instant value4() {
         return getCreationDate();
+    }
+
+    @Override
+    public String value5() {
+        return getGender();
+    }
+
+    @Override
+    public Integer value6() {
+        return getAge();
     }
 
     @Override
@@ -187,11 +245,25 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> implements Recor
     }
 
     @Override
-    public UserRecord values(UUID value1, String value2, String value3, Instant value4) {
+    public UserRecord value5(String value) {
+        setGender(value);
+        return this;
+    }
+
+    @Override
+    public UserRecord value6(Integer value) {
+        setAge(value);
+        return this;
+    }
+
+    @Override
+    public UserRecord values(UUID value1, String value2, String value3, Instant value4, String value5, Integer value6) {
         value1(value1);
         value2(value2);
         value3(value3);
         value4(value4);
+        value5(value5);
+        value6(value6);
         return this;
     }
 
@@ -209,13 +281,15 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> implements Recor
     /**
      * Create a detached, initialised UserRecord
      */
-    public UserRecord(UUID id, String email, String username, Instant creationDate) {
+    public UserRecord(UUID id, String email, String username, Instant creationDate, String gender, Integer age) {
         super(User.USER);
 
         setId(id);
         setEmail(email);
         setUsername(username);
         setCreationDate(creationDate);
+        setGender(gender);
+        setAge(age);
         resetChangedOnNotNull();
     }
 }

@@ -1,4 +1,4 @@
-package org.user_service.dto;
+package org.user_service.dto.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,8 +10,6 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDto {
-    private UUID id;
-    private String email;
+public class UserPublicDto {
     private String username;
 }

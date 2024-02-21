@@ -8,9 +8,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.user_service.constants.ControllerUrls;
-import org.user_service.dto.UserDto;
-import org.user_service.dto.UserPublicDto;
-import org.user_service.dto.UserUpdateDto;
+import org.user_service.dto.user.UserDto;
+import org.user_service.dto.user.UserPublicDto;
+import org.user_service.dto.user.UserUpdateDto;
 
 import java.util.UUID;
 

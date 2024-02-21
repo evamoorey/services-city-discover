@@ -1,4 +1,4 @@
-package org.user_service.dto;
+package org.user_service.dto.user;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -13,4 +13,7 @@ public class UserUpdateDto {
 
     @NotBlank(message = "Имя пользователя должно быть заполнено")
     private String username;
+
+    private Gender gender;
+    private Integer age;
 }
