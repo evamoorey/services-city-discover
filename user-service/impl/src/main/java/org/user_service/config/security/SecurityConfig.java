@@ -31,7 +31,9 @@ public class SecurityConfig extends OncePerRequestFilter {
             "/user-service/auth/login",
             "/user-service/auth/refresh");
 
-    private static final String swaggerURI = "/user-service/swagger-ui";
+    private static final Set<String> swaggerURI = Set.of(
+            "/user-service/swagger-ui",
+            "/user-service/v3/api-docs");
 
     public SecurityConfig(TokenService tokenService) {
         this.tokenService = tokenService;
@@ -39,18 +41,12 @@ public class SecurityConfig extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(@NotNull HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) {
-        if (checkSwaggerURI(request.getRequestURI())) {
-            return;
-        }
-
         try {
-            if (!checkWhitelabelURI(request.getRequestURI())) {
-                String authorization = request.getHeader("Authorization");
-                tokenService.verifyToken(authorization);
+            String authorization = request.getHeader("Authorization");
+            tokenService.verifyToken(authorization);
 
-                Object userId = getUserFromToken(authorization);
-                request.setAttribute("id", userId);
-            }
+            Object userId = getUserFromToken(authorization);
+            request.setAttribute("id", userId);
 
             filterChain.doFilter(request, response);
         } catch (Exception e) {
@@ -59,11 +55,9 @@ public class SecurityConfig extends OncePerRequestFilter {
         }
     }
 
-    private boolean checkWhitelabelURI(String requestURI) {
-        return whitelistURI.stream().anyMatch(requestURI::contains);
-    }
-
-    private boolean checkSwaggerURI(String requestURI) {
-        return requestURI.contains(swaggerURI);
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        return swaggerURI.stream().anyMatch(request.getRequestURI()::contains)
+                || whitelistURI.stream().anyMatch(request.getRequestURI()::contains);
     }
 }
