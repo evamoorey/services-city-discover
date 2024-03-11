@@ -1,4 +1,4 @@
-FROM maven:3-eclipse-temurin-20-alpine AS build
+FROM --platform=linux/amd64 maven:3-eclipse-temurin-20-alpine AS build
 WORKDIR /app
 COPY . .
 RUN mvn clean install -DskipTests

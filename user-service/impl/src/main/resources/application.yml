@@ -9,9 +9,9 @@ spring:
     change-log: classpath:db.changelog/master.xml
     enabled: true
   datasource:
-    url: "jdbc:postgresql://localhost:5432/user_info"
-    username: postgres
-    password: postgres
+    url: "jdbc:postgresql://postgres-user:5432/user_info"
+    username: city-discover-user
+    password: city-discover-2024
     hikari:
       driver-class-name: org.postgresql.Driver
   jooq:
