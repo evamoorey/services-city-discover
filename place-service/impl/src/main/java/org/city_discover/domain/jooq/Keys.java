@@ -24,4 +24,5 @@ public class Keys {
     // -------------------------------------------------------------------------
 
     public static final UniqueKey<PlaceRecord> PK_PLACE_UUID = Internal.createUniqueKey(Place.PLACE, DSL.name("pk_place_uuid"), new TableField[] { Place.PLACE.ID }, true);
+    public static final UniqueKey<PlaceRecord> UNIQUE_PLACE_NAME = Internal.createUniqueKey(Place.PLACE, DSL.name("unique_place_name"), new TableField[] { Place.PLACE.NAME }, true);
 }

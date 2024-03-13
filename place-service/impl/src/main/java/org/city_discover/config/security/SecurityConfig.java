@@ -26,11 +26,12 @@ public class SecurityConfig extends OncePerRequestFilter {
     private HandlerExceptionResolver resolver;
 
     private final TokenService tokenService;
-    private static final Set<String> whitelistURI = Set.of();
+    private static final Set<String> whitelistURI = Set.of(
+    );
 
     private static final Set<String> swaggerURI = Set.of(
-            "/user-service/swagger-ui",
-            "/user-service/v3/api-docs");
+            "/place-service/swagger-ui",
+            "/place-service/v3/api-docs");
 
     public SecurityConfig(TokenService tokenService) {
         this.tokenService = tokenService;

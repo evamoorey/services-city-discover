@@ -5,6 +5,8 @@ package org.city_discover.domain.jooq.tables;
 
 
 import java.time.Instant;
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 import java.util.function.Function;
 
@@ -116,6 +118,11 @@ public class Place extends TableImpl<PlaceRecord> {
     @Override
     public UniqueKey<PlaceRecord> getPrimaryKey() {
         return Keys.PK_PLACE_UUID;
+    }
+
+    @Override
+    public List<UniqueKey<PlaceRecord>> getUniqueKeys() {
+        return Arrays.asList(Keys.UNIQUE_PLACE_NAME);
     }
 
     @Override
