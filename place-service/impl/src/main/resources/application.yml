@@ -1,0 +1,28 @@
+server:
+  port: ${PORT_TO_EXPOSE:8051}
+  forward-headers-strategy: framework
+  servlet:
+    context-path: "/place-service"
+
+spring:
+  liquibase:
+    change-log: classpath:db.changelog/master.xml
+    enabled: true
+  datasource:
+    url: "jdbc:postgresql://postgres-user:5432/place_info"
+    username: city-discover-user
+    password: city-discover-2024
+    hikari:
+      driver-class-name: org.postgresql.Driver
+  jooq:
+    sql-dialect: postgres
+
+  data:
+    web:
+      pageable:
+        max-page-size: 10000
+  application:
+    name: "place-service"
+
+jwt:
+  secret: "uR2djMIlRYULTTvgMdQMFkil5Ecg3qauWYfVbw0jQyTYx0a1Lm2bW9"
