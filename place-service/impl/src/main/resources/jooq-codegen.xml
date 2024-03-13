@@ -30,7 +30,7 @@
             <records>true</records>
         </generate>
         <target>
-            <packageName>org.user_service.domain.jooq</packageName>
+            <packageName>org.city_discover.domain.jooq</packageName>
             <directory>src/main/java</directory>
         </target>
     </generator>
