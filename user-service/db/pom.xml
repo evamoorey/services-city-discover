@@ -16,7 +16,6 @@
         <maven.compiler.target>20</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <!--        todo поменять хост и порт для прода-->
         <liquibase.host>localhost</liquibase.host>
         <liquibase.port>5432</liquibase.port>
         <liquibase.db>user_info</liquibase.db>
