@@ -3,6 +3,8 @@ package org.city_discover.advice;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.city_discover.controller.AuthController;
+import org.city_discover.controller.SubscriptionController;
+import org.city_discover.controller.UserController;
 import org.city_discover.dto.wrapper.ResponseWrappedDto;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
@@ -11,7 +13,7 @@ import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
-@RestControllerAdvice(assignableTypes = {AuthController.class})
+@RestControllerAdvice(assignableTypes = {AuthController.class, SubscriptionController.class, UserController.class})
 @Slf4j
 public class ResponseWrapperAdvice implements ResponseBodyAdvice<Object> {
 
