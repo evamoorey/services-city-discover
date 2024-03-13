@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.city_discover.dto.user.Gender;
 
 import java.time.Instant;
 import java.util.UUID;

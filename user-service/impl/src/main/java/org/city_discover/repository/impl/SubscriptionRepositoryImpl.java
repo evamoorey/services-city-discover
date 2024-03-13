@@ -2,7 +2,6 @@ package org.city_discover.repository.impl;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.city_discover.domain.jooq.tables.Subscription;
 import org.city_discover.domain.jooq.tables.User;
 import org.city_discover.dto.SubscriptionDto;
 import org.city_discover.entity.SubscriptionEntity;
@@ -18,6 +17,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static org.city_discover.domain.jooq.tables.Subscription.SUBSCRIPTION;
+
 @Repository
 @AllArgsConstructor
 @Slf4j
@@ -27,9 +28,9 @@ public class SubscriptionRepositoryImpl implements SubscriptionRepository {
 
     @Override
     public SubscriptionEntity insert(SubscriptionEntity entity) {
-        return dsl.insertInto(Subscription.SUBSCRIPTION)
-                .set(Subscription.SUBSCRIPTION.SUBSCRIBER_ID, entity.getSubscriber())
-                .set(Subscription.SUBSCRIPTION.PUBLISHER_ID, entity.getPublisher())
+        return dsl.insertInto(SUBSCRIPTION)
+                .set(SUBSCRIPTION.SUBSCRIBER_ID, entity.getSubscriber())
+                .set(SUBSCRIPTION.PUBLISHER_ID, entity.getPublisher())
                 .returning()
                 .fetchOptional()
                 .orElseThrow(() -> {
@@ -41,9 +42,9 @@ public class SubscriptionRepositoryImpl implements SubscriptionRepository {
 
     @Override
     public Optional<SubscriptionEntity> findBy(UUID subscriber, UUID publisher) {
-        return dsl.selectFrom(Subscription.SUBSCRIPTION)
-                .where(Subscription.SUBSCRIPTION.SUBSCRIBER_ID.eq(subscriber))
-                .and(Subscription.SUBSCRIPTION.PUBLISHER_ID.eq(publisher))
+        return dsl.selectFrom(SUBSCRIPTION)
+                .where(SUBSCRIPTION.SUBSCRIBER_ID.eq(subscriber))
+                .and(SUBSCRIPTION.PUBLISHER_ID.eq(publisher))
                 .fetchOptionalInto(SubscriptionEntity.class);
     }
 
@@ -52,10 +53,10 @@ public class SubscriptionRepositoryImpl implements SubscriptionRepository {
         List<SubscriptionDto> data = dsl.select(
                         User.USER.ID,
                         User.USER.USERNAME)
-                .from(Subscription.SUBSCRIPTION)
+                .from(SUBSCRIPTION)
                 .join(User.USER)
-                .on(Subscription.SUBSCRIPTION.PUBLISHER_ID.eq(User.USER.ID))
-                .where(Subscription.SUBSCRIPTION.SUBSCRIBER_ID.eq(id))
+                .on(SUBSCRIPTION.PUBLISHER_ID.eq(User.USER.ID))
+                .where(SUBSCRIPTION.SUBSCRIBER_ID.eq(id))
                 .limit(pageable.getPageSize())
                 .offset(pageable.getOffset())
                 .fetchInto(SubscriptionDto.class);
@@ -63,10 +64,10 @@ public class SubscriptionRepositoryImpl implements SubscriptionRepository {
         int total = dsl.fetchCount(dsl.select(
                         User.USER.ID,
                         User.USER.USERNAME)
-                .from(Subscription.SUBSCRIPTION)
+                .from(SUBSCRIPTION)
                 .join(User.USER)
-                .on(Subscription.SUBSCRIPTION.PUBLISHER_ID.eq(User.USER.ID))
-                .where(Subscription.SUBSCRIPTION.SUBSCRIBER_ID.eq(id)));
+                .on(SUBSCRIPTION.PUBLISHER_ID.eq(User.USER.ID))
+                .where(SUBSCRIPTION.SUBSCRIBER_ID.eq(id)));
 
         return new PageImpl<>(data, pageable, total);
     }
@@ -76,28 +77,28 @@ public class SubscriptionRepositoryImpl implements SubscriptionRepository {
         List<SubscriptionDto> data = dsl.select(
                         User.USER.ID,
                         User.USER.USERNAME)
-                .from(Subscription.SUBSCRIPTION)
+                .from(SUBSCRIPTION)
                 .join(User.USER)
-                .on(Subscription.SUBSCRIPTION.SUBSCRIBER_ID.eq(User.USER.ID))
-                .where(Subscription.SUBSCRIPTION.PUBLISHER_ID.eq(id))
+                .on(SUBSCRIPTION.SUBSCRIBER_ID.eq(User.USER.ID))
+                .where(SUBSCRIPTION.PUBLISHER_ID.eq(id))
                 .limit(pageable.getPageSize())
                 .offset(pageable.getOffset())
                 .fetchInto(SubscriptionDto.class);
 
         int total = dsl.fetchCount(dsl.select(User.USER.USERNAME)
-                .from(Subscription.SUBSCRIPTION)
+                .from(SUBSCRIPTION)
                 .join(User.USER)
-                .on(Subscription.SUBSCRIPTION.SUBSCRIBER_ID.eq(User.USER.ID))
-                .where(Subscription.SUBSCRIPTION.PUBLISHER_ID.eq(id)));
+                .on(SUBSCRIPTION.SUBSCRIBER_ID.eq(User.USER.ID))
+                .where(SUBSCRIPTION.PUBLISHER_ID.eq(id)));
 
         return new PageImpl<>(data, pageable, total);
     }
 
     @Override
     public void deleteBy(UUID subscriber, UUID publisher) {
-        dsl.deleteFrom(Subscription.SUBSCRIPTION)
-                .where(Subscription.SUBSCRIPTION.SUBSCRIBER_ID.eq(subscriber))
-                .and(Subscription.SUBSCRIPTION.PUBLISHER_ID.eq(publisher))
+        dsl.deleteFrom(SUBSCRIPTION)
+                .where(SUBSCRIPTION.SUBSCRIBER_ID.eq(subscriber))
+                .and(SUBSCRIPTION.PUBLISHER_ID.eq(publisher))
                 .execute();
     }
 }
