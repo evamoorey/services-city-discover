@@ -15,4 +15,6 @@ public class PlaceCardDto {
 
     private String description;
     private String author;
+    private Double latitude;
+    private Double longitude;
 }

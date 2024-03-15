@@ -10,8 +10,8 @@ import java.util.UUID;
 import org.city_discover.domain.jooq.tables.Place;
 import org.jooq.Field;
 import org.jooq.Record1;
-import org.jooq.Record6;
-import org.jooq.Row6;
+import org.jooq.Record8;
+import org.jooq.Row8;
 import org.jooq.impl.UpdatableRecordImpl;
 
 
@@ -19,7 +19,7 @@ import org.jooq.impl.UpdatableRecordImpl;
  * Places
  */
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
-public class PlaceRecord extends UpdatableRecordImpl<PlaceRecord> implements Record6<UUID, String, String, Instant, Instant, String> {
+public class PlaceRecord extends UpdatableRecordImpl<PlaceRecord> implements Record8<UUID, String, String, Instant, Instant, String, Double, Double> {
 
     private static final long serialVersionUID = 1L;
 
@@ -109,6 +109,34 @@ public class PlaceRecord extends UpdatableRecordImpl<PlaceRecord> implements Rec
         return (String) get(5);
     }
 
+    /**
+     * Setter for <code>public.place.latitude</code>. Place latitude
+     */
+    public void setLatitude(Double value) {
+        set(6, value);
+    }
+
+    /**
+     * Getter for <code>public.place.latitude</code>. Place latitude
+     */
+    public Double getLatitude() {
+        return (Double) get(6);
+    }
+
+    /**
+     * Setter for <code>public.place.longitude</code>. Place longitude
+     */
+    public void setLongitude(Double value) {
+        set(7, value);
+    }
+
+    /**
+     * Getter for <code>public.place.longitude</code>. Place longitude
+     */
+    public Double getLongitude() {
+        return (Double) get(7);
+    }
+
     // -------------------------------------------------------------------------
     // Primary key information
     // -------------------------------------------------------------------------
@@ -119,17 +147,17 @@ public class PlaceRecord extends UpdatableRecordImpl<PlaceRecord> implements Rec
     }
 
     // -------------------------------------------------------------------------
-    // Record6 type implementation
+    // Record8 type implementation
     // -------------------------------------------------------------------------
 
     @Override
-    public Row6<UUID, String, String, Instant, Instant, String> fieldsRow() {
-        return (Row6) super.fieldsRow();
+    public Row8<UUID, String, String, Instant, Instant, String, Double, Double> fieldsRow() {
+        return (Row8) super.fieldsRow();
     }
 
     @Override
-    public Row6<UUID, String, String, Instant, Instant, String> valuesRow() {
-        return (Row6) super.valuesRow();
+    public Row8<UUID, String, String, Instant, Instant, String, Double, Double> valuesRow() {
+        return (Row8) super.valuesRow();
     }
 
     @Override
@@ -163,6 +191,16 @@ public class PlaceRecord extends UpdatableRecordImpl<PlaceRecord> implements Rec
     }
 
     @Override
+    public Field<Double> field7() {
+        return Place.PLACE.LATITUDE;
+    }
+
+    @Override
+    public Field<Double> field8() {
+        return Place.PLACE.LONGITUDE;
+    }
+
+    @Override
     public UUID component1() {
         return getId();
     }
@@ -193,6 +231,16 @@ public class PlaceRecord extends UpdatableRecordImpl<PlaceRecord> implements Rec
     }
 
     @Override
+    public Double component7() {
+        return getLatitude();
+    }
+
+    @Override
+    public Double component8() {
+        return getLongitude();
+    }
+
+    @Override
     public UUID value1() {
         return getId();
     }
@@ -220,6 +268,16 @@ public class PlaceRecord extends UpdatableRecordImpl<PlaceRecord> implements Rec
     @Override
     public String value6() {
         return getAuthor();
+    }
+
+    @Override
+    public Double value7() {
+        return getLatitude();
+    }
+
+    @Override
+    public Double value8() {
+        return getLongitude();
     }
 
     @Override
@@ -259,13 +317,27 @@ public class PlaceRecord extends UpdatableRecordImpl<PlaceRecord> implements Rec
     }
 
     @Override
-    public PlaceRecord values(UUID value1, String value2, String value3, Instant value4, Instant value5, String value6) {
+    public PlaceRecord value7(Double value) {
+        setLatitude(value);
+        return this;
+    }
+
+    @Override
+    public PlaceRecord value8(Double value) {
+        setLongitude(value);
+        return this;
+    }
+
+    @Override
+    public PlaceRecord values(UUID value1, String value2, String value3, Instant value4, Instant value5, String value6, Double value7, Double value8) {
         value1(value1);
         value2(value2);
         value3(value3);
         value4(value4);
         value5(value5);
         value6(value6);
+        value7(value7);
+        value8(value8);
         return this;
     }
 
@@ -283,7 +355,7 @@ public class PlaceRecord extends UpdatableRecordImpl<PlaceRecord> implements Rec
     /**
      * Create a detached, initialised PlaceRecord
      */
-    public PlaceRecord(UUID id, String name, String description, Instant creationDate, Instant modificationDate, String author) {
+    public PlaceRecord(UUID id, String name, String description, Instant creationDate, Instant modificationDate, String author, Double latitude, Double longitude) {
         super(Place.PLACE);
 
         setId(id);
@@ -292,6 +364,8 @@ public class PlaceRecord extends UpdatableRecordImpl<PlaceRecord> implements Rec
         setCreationDate(creationDate);
         setModificationDate(modificationDate);
         setAuthor(author);
+        setLatitude(latitude);
+        setLongitude(longitude);
         resetChangedOnNotNull();
     }
 }

@@ -17,6 +17,8 @@ public class PlaceEntity {
     private String name;
     private String description;
     private String author;
+    private Double latitude;
+    private Double longitude;
     private Instant creationDate;
     private Instant modificationDate;
 }

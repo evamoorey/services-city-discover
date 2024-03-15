@@ -9,5 +9,6 @@
     <include file="002_addPlaceTable.xml" relativeToChangelogFile="true"/>
     <include file="003_addConstraintPlaceTable.xml" relativeToChangelogFile="true"/>
     <include file="004_addAuthorFieldPlaceTable.xml" relativeToChangelogFile="true"/>
+    <include file="005_addCoordsFieldsPlaceTable.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>
