@@ -16,7 +16,4 @@ public class PlaceCardUserDto {
     private String name;
 
     private String description;
-
-    @NotBlank(message = "ID автора должен быть заполнен")
-    private UUID author;
 }

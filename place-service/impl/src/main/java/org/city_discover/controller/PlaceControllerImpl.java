@@ -1,5 +1,6 @@
 package org.city_discover.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.city_discover.dto.PlaceCardDto;
@@ -21,6 +22,7 @@ import static org.city_discover.utill.Converter.getErrorsMap;
 public class PlaceControllerImpl implements PlaceController {
 
     private final PlaceService placeService;
+    private final HttpServletRequest request;
 
     @Override
     public ResponseEntity<?> create(PlaceCardUserDto placeCardDto, BindingResult bindingResult) {
@@ -29,7 +31,9 @@ public class PlaceControllerImpl implements PlaceController {
             return ResponseEntity.badRequest().body(errorsMap);
         }
 
-        PlaceCardDto placeCard = placeService.create(placeCardDto);
+        UUID userId = UUID.fromString((String) request.getAttribute("id"));
+        PlaceCardDto placeCard = placeService.create(userId, placeCardDto);
+
         return new ResponseEntity<>(placeCard, HttpStatus.OK);
     }
 

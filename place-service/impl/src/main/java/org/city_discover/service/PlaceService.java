@@ -6,7 +6,7 @@ import org.city_discover.dto.PlaceCardUserDto;
 import java.util.UUID;
 
 public interface PlaceService {
-    PlaceCardDto create(PlaceCardUserDto placeCardDto);
+    PlaceCardDto create(UUID userId, PlaceCardUserDto placeCardDto);
 
     PlaceCardDto findById(UUID id);
 }
