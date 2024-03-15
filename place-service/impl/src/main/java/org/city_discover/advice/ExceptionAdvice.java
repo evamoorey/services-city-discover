@@ -3,7 +3,9 @@ package org.city_discover.advice;
 import lombok.extern.slf4j.Slf4j;
 import org.city_discover.dto.wrapper.ErrorDto;
 import org.city_discover.dto.wrapper.ResponseWrappedDto;
+import org.city_discover.exception.NoSuchEntityException;
 import org.city_discover.exception.UnauthorizedException;
+import org.city_discover.exception.UnprocessableActionException;
 import org.jooq.exception.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,15 +23,13 @@ public class ExceptionAdvice {
         this.errorList = errorList;
     }
 
-//    @ExceptionHandler({NoSuchEntityException.class,
-//            TooMuchRequestsException.class,
-//            NotUniqueException.class,
-//            UnprocessableActionException.class})
-//    public ResponseEntity<?> handleBadRequestException(RuntimeException e) {
-//        ResponseWrappedDto responseWrappedDto = buildResponseWrappedDtoFromException(e);
-//
-//        return new ResponseEntity<>(responseWrappedDto, HttpStatus.BAD_REQUEST);
-//    }
+    @ExceptionHandler({NoSuchEntityException.class,
+            UnprocessableActionException.class})
+    public ResponseEntity<?> handleBadRequestException(RuntimeException e) {
+        ResponseWrappedDto responseWrappedDto = buildResponseWrappedDtoFromException(e);
+
+        return new ResponseEntity<>(responseWrappedDto, HttpStatus.BAD_REQUEST);
+    }
 
     @ExceptionHandler({UnauthorizedException.class})
     public ResponseEntity<?> handleUnauthorizedException(RuntimeException e) {

@@ -3,6 +3,7 @@ package org.city_discover.controller;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.city_discover.dto.PlaceCardDto;
+import org.city_discover.dto.PlaceCardUserDto;
 import org.city_discover.dto.wrapper.ErrorsMap;
 import org.city_discover.service.PlaceService;
 import org.springframework.http.HttpStatus;
@@ -22,22 +23,19 @@ public class PlaceControllerImpl implements PlaceController {
     private final PlaceService placeService;
 
     @Override
-    public ResponseEntity<?> create(PlaceCardDto placeCardDto, BindingResult bindingResult) {
+    public ResponseEntity<?> create(PlaceCardUserDto placeCardDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             ErrorsMap errorsMap = getErrorsMap(bindingResult);
             return ResponseEntity.badRequest().body(errorsMap);
         }
 
         PlaceCardDto placeCard = placeService.create(placeCardDto);
-
         return new ResponseEntity<>(placeCard, HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity<PlaceCardDto> findById(UUID id) {
-//        UserPublicDto user = userService.findBy(id);
-
-//        return new ResponseEntity<>(user, HttpStatus.OK);
-        return null;
+        PlaceCardDto placeCard = placeService.findById(id);
+        return new ResponseEntity<>(placeCard, HttpStatus.OK);
     }
 }

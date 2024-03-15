@@ -8,5 +8,6 @@
     <include file="001_addTagVersion-1.0.xml" relativeToChangelogFile="true"/>
     <include file="002_addPlaceTable.xml" relativeToChangelogFile="true"/>
     <include file="003_addConstraintPlaceTable.xml" relativeToChangelogFile="true"/>
+    <include file="004_addAuthorFieldPlaceTable.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

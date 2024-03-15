@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.city_discover.constants.ControllerUrls;
 import org.city_discover.dto.PlaceCardDto;
+import org.city_discover.dto.PlaceCardUserDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -21,7 +22,7 @@ public interface PlaceController {
 
     @PostMapping(path = ControllerUrls.PLACE_URL)
     @Operation(summary = "Создать карточку места")
-    ResponseEntity<?> create(@RequestBody @Validated PlaceCardDto placeCardDto,
+    ResponseEntity<?> create(@RequestBody @Validated PlaceCardUserDto placeCardDto,
                              BindingResult bindingResult);
 
     @GetMapping(path = ControllerUrls.PLACE_ID_URL)

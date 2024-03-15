@@ -15,11 +15,11 @@ import org.city_discover.domain.jooq.Public;
 import org.city_discover.domain.jooq.tables.records.PlaceRecord;
 import org.jooq.Field;
 import org.jooq.ForeignKey;
-import org.jooq.Function5;
+import org.jooq.Function6;
 import org.jooq.Name;
 import org.jooq.Record;
 import org.jooq.Records;
-import org.jooq.Row5;
+import org.jooq.Row6;
 import org.jooq.Schema;
 import org.jooq.SelectField;
 import org.jooq.Table;
@@ -76,6 +76,12 @@ public class Place extends TableImpl<PlaceRecord> {
      * The column <code>public.place.modification_date</code>. Modification date
      */
     public final TableField<PlaceRecord, Instant> MODIFICATION_DATE = createField(DSL.name("modification_date"), SQLDataType.INSTANT.nullable(false).defaultValue(DSL.field(DSL.raw("now()"), SQLDataType.INSTANT)), this, "Modification date");
+
+    /**
+     * The column <code>public.place.author</code>. Place author (system or user
+     * ID)
+     */
+    public final TableField<PlaceRecord, String> AUTHOR = createField(DSL.name("author"), SQLDataType.VARCHAR.nullable(false), this, "Place author (system or user ID)");
 
     private Place(Name alias, Table<PlaceRecord> aliased) {
         this(alias, aliased, null);
@@ -165,18 +171,18 @@ public class Place extends TableImpl<PlaceRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row5 type methods
+    // Row6 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row5<UUID, String, String, Instant, Instant> fieldsRow() {
-        return (Row5) super.fieldsRow();
+    public Row6<UUID, String, String, Instant, Instant, String> fieldsRow() {
+        return (Row6) super.fieldsRow();
     }
 
     /**
      * Convenience mapping calling {@link SelectField#convertFrom(Function)}.
      */
-    public <U> SelectField<U> mapping(Function5<? super UUID, ? super String, ? super String, ? super Instant, ? super Instant, ? extends U> from) {
+    public <U> SelectField<U> mapping(Function6<? super UUID, ? super String, ? super String, ? super Instant, ? super Instant, ? super String, ? extends U> from) {
         return convertFrom(Records.mapping(from));
     }
 
@@ -184,7 +190,7 @@ public class Place extends TableImpl<PlaceRecord> {
      * Convenience mapping calling {@link SelectField#convertFrom(Class,
      * Function)}.
      */
-    public <U> SelectField<U> mapping(Class<U> toType, Function5<? super UUID, ? super String, ? super String, ? super Instant, ? super Instant, ? extends U> from) {
+    public <U> SelectField<U> mapping(Class<U> toType, Function6<? super UUID, ? super String, ? super String, ? super Instant, ? super Instant, ? super String, ? extends U> from) {
         return convertFrom(toType, Records.mapping(from));
     }
 }
