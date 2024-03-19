@@ -6,7 +6,7 @@ services:
     volumes:
       - .:/recommendation
     ports:
-      - "5000:5000"
+      - "5001:5000"
 
   user-service:
     build:
@@ -16,7 +16,7 @@ services:
       - "8050:8050"
     depends_on:
       - postgres-user
-      
+
   postgres-user:
     image: postgres
     environment:
@@ -25,9 +25,31 @@ services:
       POSTGRES_PASSWORD: "city-discover-2024"
       PGDATA: "/var/lib/postgresql/data/pgdata"
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - pgdata_user:/var/lib/postgresql/data
     ports:
       - "5440:5432"
 
+  place-service:
+    build:
+      context: ./place-service
+      dockerfile: Dockerfile
+    ports:
+      - "8051:8050"
+    depends_on:
+      - postgres-place
+
+  postgres-place:
+    image: postgres
+    environment:
+      POSTGRES_DB: "place_info"
+      POSTGRES_USER: "city-discover-user"
+      POSTGRES_PASSWORD: "city-discover-2024"
+      PGDATA: "/var/lib/postgresql/data/pgdata"
+    volumes:
+      - pgdata_place:/var/lib/postgresql/data
+    ports:
+      - "5441:5432"
+
 volumes:
-  pgdata:
+  pgdata_user:
+  pgdata_place:
