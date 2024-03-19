@@ -1,4 +1,13 @@
 services:
+  recommendation-service:
+    build:
+      context: ./microservice_reccomendations
+      dockerfile: Dockerfile
+    volumes:
+      - .:/recommendation
+    ports:
+      - "5000:5000"
+
   user-service:
     build:
       context: ./user-service
