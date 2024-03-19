@@ -1,0 +1,8 @@
+version: '3.8'
+services:
+  app:
+    build: .  # Если docker-compose.yml находится в директории CITY_DISCOVER_APP
+    volumes:
+      - .:/app
+    ports:
+      - "5000:5000"
