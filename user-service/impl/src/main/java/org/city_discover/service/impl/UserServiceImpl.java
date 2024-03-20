@@ -1,20 +1,24 @@
 package org.city_discover.service.impl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.city_discover.repository.UserRepository;
-import org.modelmapper.ModelMapper;
-import org.springframework.stereotype.Service;
 import org.city_discover.dto.user.UserDto;
 import org.city_discover.dto.user.UserPublicDto;
 import org.city_discover.dto.user.UserUpdateDto;
 import org.city_discover.entity.UserEntity;
 import org.city_discover.exception.NoSuchEntityException;
 import org.city_discover.exception.NotUniqueException;
+import org.city_discover.repository.UserRepository;
 import org.city_discover.service.UserService;
+import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 import java.util.UUID;
+
+import static org.city_discover.utill.EntityConverter.mapUserEntityToUserDto;
+import static org.city_discover.utill.EntityConverter.mapUserUpdateDtoToUserEntity;
 
 @Service
 @Slf4j
@@ -23,6 +27,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
+    private final ObjectMapper objectMapper;
 
     @Override
     public UserDto create(String email) {
@@ -38,7 +43,7 @@ public class UserServiceImpl implements UserService {
                 .build();
 
         UserEntity inserted = userRepository.insert(newUser);
-        return modelMapper.map(inserted, UserDto.class);
+        return mapUserEntityToUserDto(inserted);
     }
 
     @Override
@@ -50,17 +55,17 @@ public class UserServiceImpl implements UserService {
             return new NoSuchEntityException("Пользователь не существует");
         });
 
-        UserEntity toUpdate = modelMapper.map(userUpdateDto, UserEntity.class);
+        UserEntity toUpdate = mapUserUpdateDtoToUserEntity(userUpdateDto);
         toUpdate.setId(user.getId());
         toUpdate.setEmail(user.getEmail());
         toUpdate.setCreationDate(user.getCreationDate());
 
         if (!equalHashes(user, toUpdate)) {
             UserEntity updated = userRepository.update(toUpdate);
-            return modelMapper.map(updated, UserDto.class);
+            return mapUserEntityToUserDto(updated);
         }
 
-        return modelMapper.map(user, UserDto.class);
+        return mapUserEntityToUserDto(user);
     }
 
     @Override
@@ -70,7 +75,7 @@ public class UserServiceImpl implements UserService {
             return new NoSuchEntityException("Пользователь не существует");
         });
 
-        return modelMapper.map(user, UserDto.class);
+        return mapUserEntityToUserDto(user);
     }
 
     @Override

@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Function;
 
+import org.city_discover.domain.jooq.Keys;
+import org.city_discover.domain.jooq.Public;
 import org.city_discover.domain.jooq.tables.records.SubscriptionRecord;
 import org.jooq.Field;
 import org.jooq.ForeignKey;
@@ -25,8 +27,6 @@ import org.jooq.TableOptions;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
-import org.city_discover.domain.jooq.Keys;
-import org.city_discover.domain.jooq.Public;
 
 
 /**

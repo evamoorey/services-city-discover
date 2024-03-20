@@ -18,5 +18,6 @@ public class UserEntity {
     private String username;
     private String gender;
     private Integer age;
+    private String preferences;
     private Instant creationDate;
 }

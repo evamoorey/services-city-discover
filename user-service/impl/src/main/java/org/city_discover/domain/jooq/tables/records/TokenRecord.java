@@ -6,11 +6,11 @@ package org.city_discover.domain.jooq.tables.records;
 
 import java.util.UUID;
 
+import org.city_discover.domain.jooq.tables.Token;
 import org.jooq.Field;
 import org.jooq.Record2;
 import org.jooq.Row2;
 import org.jooq.impl.TableRecordImpl;
-import org.city_discover.domain.jooq.tables.Token;
 
 
 /**

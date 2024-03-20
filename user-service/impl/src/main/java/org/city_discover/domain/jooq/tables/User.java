@@ -10,14 +10,16 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Function;
 
+import org.city_discover.domain.jooq.Keys;
+import org.city_discover.domain.jooq.Public;
 import org.city_discover.domain.jooq.tables.records.UserRecord;
 import org.jooq.Field;
 import org.jooq.ForeignKey;
-import org.jooq.Function6;
+import org.jooq.Function7;
 import org.jooq.Name;
 import org.jooq.Record;
 import org.jooq.Records;
-import org.jooq.Row6;
+import org.jooq.Row7;
 import org.jooq.Schema;
 import org.jooq.SelectField;
 import org.jooq.Table;
@@ -27,8 +29,6 @@ import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
-import org.city_discover.domain.jooq.Keys;
-import org.city_discover.domain.jooq.Public;
 
 
 /**
@@ -81,6 +81,11 @@ public class User extends TableImpl<UserRecord> {
      * The column <code>public.user.age</code>. User age
      */
     public final TableField<UserRecord, Integer> AGE = createField(DSL.name("age"), SQLDataType.INTEGER, this, "User age");
+
+    /**
+     * The column <code>public.user.preferences</code>. User preferences
+     */
+    public final TableField<UserRecord, String> PREFERENCES = createField(DSL.name("preferences"), SQLDataType.CLOB, this, "User preferences");
 
     private User(Name alias, Table<UserRecord> aliased) {
         this(alias, aliased, null);
@@ -170,18 +175,18 @@ public class User extends TableImpl<UserRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row6 type methods
+    // Row7 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row6<UUID, String, String, Instant, String, Integer> fieldsRow() {
-        return (Row6) super.fieldsRow();
+    public Row7<UUID, String, String, Instant, String, Integer, String> fieldsRow() {
+        return (Row7) super.fieldsRow();
     }
 
     /**
      * Convenience mapping calling {@link SelectField#convertFrom(Function)}.
      */
-    public <U> SelectField<U> mapping(Function6<? super UUID, ? super String, ? super String, ? super Instant, ? super String, ? super Integer, ? extends U> from) {
+    public <U> SelectField<U> mapping(Function7<? super UUID, ? super String, ? super String, ? super Instant, ? super String, ? super Integer, ? super String, ? extends U> from) {
         return convertFrom(Records.mapping(from));
     }
 
@@ -189,7 +194,7 @@ public class User extends TableImpl<UserRecord> {
      * Convenience mapping calling {@link SelectField#convertFrom(Class,
      * Function)}.
      */
-    public <U> SelectField<U> mapping(Class<U> toType, Function6<? super UUID, ? super String, ? super String, ? super Instant, ? super String, ? super Integer, ? extends U> from) {
+    public <U> SelectField<U> mapping(Class<U> toType, Function7<? super UUID, ? super String, ? super String, ? super Instant, ? super String, ? super Integer, ? super String, ? extends U> from) {
         return convertFrom(toType, Records.mapping(from));
     }
 }

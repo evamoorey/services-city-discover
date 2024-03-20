@@ -4,6 +4,9 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.city_discover.dto.Preference;
+
+import java.util.List;
 
 
 @Data
@@ -16,4 +19,5 @@ public class UserUpdateDto {
 
     private Gender gender;
     private Integer age;
+    private List<Preference> preferences;
 }
