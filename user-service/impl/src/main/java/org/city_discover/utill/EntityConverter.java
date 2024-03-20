@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.experimental.UtilityClass;
+import org.city_discover.dto.UserExternalDto;
 import org.city_discover.dto.user.UserDto;
 import org.city_discover.dto.user.UserUpdateDto;
 import org.city_discover.entity.UserEntity;
@@ -17,6 +18,19 @@ public class EntityConverter {
 
     public static UserDto mapUserEntityToUserDto(UserEntity user) {
         UserDto dto = modelMapper.map(user, UserDto.class);
+
+        try {
+            dto.setPreferences(objectMapper.readValue(user.getPreferences(), new TypeReference<>() {
+            }));
+        } catch (JsonProcessingException e) {
+            throw new UnprocessableActionException("Невозможно конвертировать объект.");
+        }
+
+        return dto;
+    }
+
+    public static UserExternalDto mapUserEntityToUserExternalDto(UserEntity user) {
+        UserExternalDto dto = modelMapper.map(user, UserExternalDto.class);
 
         try {
             dto.setPreferences(objectMapper.readValue(user.getPreferences(), new TypeReference<>() {

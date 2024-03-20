@@ -38,7 +38,8 @@ public class ExceptionAdvice {
         return new ResponseEntity<>(responseWrappedDto, HttpStatus.UNAUTHORIZED);
     }
 
-    @ExceptionHandler({DataAccessException.class})
+    @ExceptionHandler({DataAccessException.class,
+            ExternalServiceException.class})
     public ResponseEntity<?> handleExternalServiceException(RuntimeException e) {
         ResponseWrappedDto responseWrappedDto = buildResponseWrappedDtoFromException(e);
 

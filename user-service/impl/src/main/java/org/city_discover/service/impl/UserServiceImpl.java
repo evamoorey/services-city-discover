@@ -1,6 +1,5 @@
 package org.city_discover.service.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.city_discover.dto.user.UserDto;
@@ -10,6 +9,7 @@ import org.city_discover.entity.UserEntity;
 import org.city_discover.exception.NoSuchEntityException;
 import org.city_discover.exception.NotUniqueException;
 import org.city_discover.repository.UserRepository;
+import org.city_discover.service.RecommendationExternalService;
 import org.city_discover.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -27,7 +27,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
-    private final ObjectMapper objectMapper;
+    private final RecommendationExternalService recommendationExternalService;
 
     @Override
     public UserDto create(String email) {
@@ -62,6 +62,8 @@ public class UserServiceImpl implements UserService {
 
         if (!equalHashes(user, toUpdate)) {
             UserEntity updated = userRepository.update(toUpdate);
+
+            recommendationExternalService.saveUser(updated);
             return mapUserEntityToUserDto(updated);
         }
 

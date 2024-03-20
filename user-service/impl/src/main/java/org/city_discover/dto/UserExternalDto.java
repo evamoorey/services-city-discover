@@ -13,6 +13,6 @@ public class UserExternalDto {
     private UUID id;
 
     private Integer age;
-    private Gender gender;
+    private String gender;
     private List<Preference> preferences;
 }
