@@ -70,7 +70,7 @@ def create_tables(db_path='places.db'):
     # Create Users table
     cur.execute('''
     CREATE TABLE IF NOT EXISTS Users (
-        id INTEGER PRIMARY KEY,
+        id TEXT PRIMARY KEY,
         age INTEGER,
         gender TEXT
     )''')
@@ -112,12 +112,25 @@ def create_tables(db_path='places.db'):
         name TEXT NOT NULL,
         address TEXT,
         rating REAL,
+        image TEXT,
+        description TEXT,
         reviews_count INTEGER,
         pos1 REAL,
         pos2 REAL,
         FOREIGN KEY (category_id) REFERENCES Categories(id),
         FOREIGN KEY (subcategory_id) REFERENCES Subcategories(id)
     );''')
+
+
+    # Обновляем таблицу предпочтений
+    cur.execute('''
+    CREATE TABLE IF NOT EXISTS Preferences (
+    user_id INTEGER,
+    subcategory_id INTEGER,
+    mark INTEGER,
+    FOREIGN KEY (user_id) REFERENCES Users(id),
+    FOREIGN KEY (subcategory_id) REFERENCES Subcategories(id)
+);''')
 
     conn.commit()
     conn.close()
@@ -149,7 +162,7 @@ def get_categories_with_subcategories(db_path='places.db'):
         })
 
     conn.close()
-    return json.dumps(categories_list, ensure_ascii=False)
+    return categories_list
 
 
 def get_random_places(db_path='places.db',num=1):
@@ -159,12 +172,55 @@ def get_random_places(db_path='places.db',num=1):
     conn = sqlite3.connect(db_path)
     conn.row_factory = sqlite3.Row
     cur = conn.cursor()
-    cur.execute(f'SELECT * FROM Places ORDER BY RANDOM() LIMIT {num}')
+    cur.execute(f'''
+    SELECT * FROM Places 
+    WHERE description != "Нет данных" AND image != "Нет данных"
+    ORDER BY RANDOM() LIMIT {num}
+    ''')
     places = cur.fetchall()
     conn.close()
     places_list = [dict(place) for place in places]
 
     return places_list if places_list else None
+
+def save_user_preferences(db_path, user_id, preferences):
+        conn = sqlite3.connect(db_path)
+        cur = conn.cursor()
+
+        # Удаляем старые предпочтения пользователя
+        cur.execute("DELETE FROM Preferences WHERE user_id = ?", (user_id,))
+
+        # Добавляем новые предпочтения
+        for pref in preferences:
+            print(pref)
+            cur.execute("""
+                INSERT INTO Preferences (user_id, subcategory_id, mark)
+                VALUES (?, ?, ?)
+            """, (user_id, pref['subcategory_id'], pref['mark']))
+
+        conn.commit()
+        conn.close()
+        return True
+
+
+
+
+
+def update_user_info(db_path, user_id, age, gender):
+        conn = sqlite3.connect(db_path)
+        cur = conn.cursor()
+
+        # Проверяем, существует ли пользователь
+        cur.execute("SELECT id FROM Users WHERE id = ?", (user_id,))
+        if cur.fetchone():
+            # Если пользователь существует, обновляем его данные
+            cur.execute("UPDATE Users SET age = ?, gender = ? WHERE id = ?", (age, gender, user_id))
+        else:
+            # Если пользователь не найден, добавляем его в таблицу
+            cur.execute("INSERT INTO Users (id, age, gender) VALUES (?, ?, ?)", (user_id, age, gender))
+
+        conn.commit()
+        conn.close()
 
 
 
@@ -180,6 +236,57 @@ def get_random_places(db_path='places.db',num=1):
 
 
 import sqlite3
+import csv
+
+
+
+
+def update_places(db_path, places_data):
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+
+    for place in tqdm(places_data):
+        cur.execute("""
+            UPDATE Places
+            SET image = ?, description = ?
+            WHERE name = ? AND address = ?
+        """, (place['image'], place['description'], place['name'], place['address']))
+
+    conn.commit()
+    conn.close()
+
+def read_places_data(csv_path):
+    with open(csv_path, encoding='utf-8') as csv_file:
+        csv_reader = csv.DictReader(csv_file)
+        return list(csv_reader)
+
+
+
+def add_new_columns(db_path):
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+
+    # Добавляем колонку image, если она еще не существует
+    cur.execute("SELECT * FROM pragma_table_info('Places') WHERE name='image'")
+    if not cur.fetchone():
+        cur.execute("ALTER TABLE Places ADD COLUMN image TEXT")
+
+    # Добавляем колонку description, если она еще не существует
+    cur.execute("SELECT * FROM pragma_table_info('Places') WHERE name='description'")
+    if not cur.fetchone():
+        cur.execute("ALTER TABLE Places ADD COLUMN description TEXT")
+
+    conn.commit()
+    conn.close()
+
+
+
+# Путь к вашей базе данных
+# db_path = 'places.db'
+# add_new_columns(db_path)
+#
+# places_data = read_places_data('new_places_data.csv')
+# update_places('places.db', places_data)
 
 # create_tables(db_path='places.db')
 # insert_categories_and_subcategories(db_path='places.db', categories_file='categories.csv', subcategories_file='subcategories.csv')
