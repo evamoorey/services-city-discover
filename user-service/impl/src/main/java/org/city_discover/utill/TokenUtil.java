@@ -10,17 +10,15 @@ import org.city_discover.exception.UnauthorizedException;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Map;
-import java.util.UUID;
 
 @UtilityClass
 @Slf4j
 public class TokenUtil {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    public static UUID getUserFromToken(String token) {
+    public static String getUserFromToken(String token) {
         Map<String, Object> tokenInfo = decodeToken(token);
-        String userId = (String) tokenInfo.get("sub");
-        return UUID.fromString(userId);
+        return (String) tokenInfo.get("sub");
     }
 
     private Map<String, Object> decodeToken(String authorization) {

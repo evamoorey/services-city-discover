@@ -83,7 +83,7 @@ public class AuthServiceImpl implements AuthService {
     public TokenDto refresh(String refresh) {
         tokenService.verifyToken(refresh);
 
-        UUID userId = getUserFromToken(refresh);
+        UUID userId = UUID.fromString(getUserFromToken(refresh));
         TokenEntity token = tokenService.findByUserId(userId);
 
         if (token.getRefreshToken().equals(refresh)) {

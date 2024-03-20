@@ -42,7 +42,7 @@ public class SecurityConfig extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(@NotNull HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) {
         try {
-            String authorization = request.getHeader("Authorization");
+            String authorization = request.getHeader("Authorization").replace("Bearer ", "");
             tokenService.verifyToken(authorization);
 
             Object userId = getUserFromToken(authorization);
