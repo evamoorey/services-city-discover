@@ -165,7 +165,10 @@ def get_categories_with_subcategories(db_path='places.db'):
     return categories_list
 
 
-def get_random_places(db_path='places.db',num=1):
+
+
+
+def get_user_info(user_id,db_path='places.db'):
     """
     Fetches a random place from the Places table.
     """
@@ -173,15 +176,32 @@ def get_random_places(db_path='places.db',num=1):
     conn.row_factory = sqlite3.Row
     cur = conn.cursor()
     cur.execute(f'''
-    SELECT * FROM Places 
-    WHERE description != "Нет данных" AND image != "Нет данных"
-    ORDER BY RANDOM() LIMIT {num}
+    SELECT * FROM Users 
+    WHERE id != {user_id}
     ''')
+    user_info = cur.fetchone()
+    conn.close()
+
+    return user_info if user_info else None
+
+
+def get_places(db_path='places.db'):
+    """
+   Fetches place from the Places table.
+   """
+    conn = sqlite3.connect(db_path)
+    conn.row_factory = sqlite3.Row
+    cur = conn.cursor()
+    cur.execute(f'''
+        SELECT * FROM Places 
+        WHERE description != "Нет данных" AND image != "Нет данных"
+        ''')
     places = cur.fetchall()
     conn.close()
     places_list = [dict(place) for place in places]
 
     return places_list if places_list else None
+
 
 def save_user_preferences(db_path, user_id, preferences):
         conn = sqlite3.connect(db_path)
@@ -227,7 +247,23 @@ def update_user_info(db_path, user_id, age, gender):
 
 
 
+def get_random_places(db_path='places.db',num=1):
+    """
+    Fetches a random place from the Places table.
+    """
+    conn = sqlite3.connect(db_path)
+    conn.row_factory = sqlite3.Row
+    cur = conn.cursor()
+    cur.execute(f'''
+    SELECT * FROM Places 
+    WHERE description != "Нет данных" AND image != "Нет данных"
+    ORDER BY RANDOM() LIMIT {num}
+    ''')
+    places = cur.fetchall()
+    conn.close()
+    places_list = [dict(place) for place in places]
 
+    return places_list if places_list else None
 
 
 
@@ -280,8 +316,6 @@ def add_new_columns(db_path):
     conn.close()
 
 
-
-# Путь к вашей базе данных
 # db_path = 'places.db'
 # add_new_columns(db_path)
 #
