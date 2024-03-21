@@ -118,7 +118,7 @@ def recommendations():
     # Получаем параметр num из query-строки, используем 20 как значение по умолчанию
     num = request.args.get('num', default=20, type=int)
 
-    places = database.get_random_places(num=num)
+    places = database.get_places_with_detailed_info(num=num)
     if places:
         return jsonify(places)
     else:

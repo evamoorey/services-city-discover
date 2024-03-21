@@ -247,12 +247,12 @@ def update_user_info(db_path, user_id, age, gender):
 
 
 
-def get_random_places(db_path='places.db',num=1):
+def get_places_with_detailed_info(db_path='places.db', num=1):
     """
-    Fetches a random place from the Places table.
+    Fetches a random place from the Places table and splits the image column by ';'.
     """
     conn = sqlite3.connect(db_path)
-    conn.row_factory = sqlite3.Row
+    conn.row_factory = sqlite3.Row  # Установка row_factory для получения результатов в виде словаря
     cur = conn.cursor()
     cur.execute(f'''
     SELECT * FROM Places 
@@ -261,7 +261,14 @@ def get_random_places(db_path='places.db',num=1):
     ''')
     places = cur.fetchall()
     conn.close()
-    places_list = [dict(place) for place in places]
+
+    # Преобразование каждой записи в словарь и разделение строки изображений
+    places_list = []
+    for place in places:
+        place_dict = dict(place)
+        # Разделение строки изображений по ';' и обновление значения в словаре
+        place_dict['image'] = place_dict['image'].split(';')
+        places_list.append(place_dict)
 
     return places_list if places_list else None
 
