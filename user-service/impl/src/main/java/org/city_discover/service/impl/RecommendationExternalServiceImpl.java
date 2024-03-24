@@ -27,12 +27,17 @@ public class RecommendationExternalServiceImpl implements RecommendationExternal
 
         String resourceUrl = "http://" + recommendationProperties.getHost() + ":" +
                 recommendationProperties.getPort() + "/submit_preferences";
-
         HttpEntity<UserExternalDto> request = new HttpEntity<>(dto);
-        Response response = restTemplate.postForObject(resourceUrl, request, Response.class);
 
-        if (response == null || response.getStatus() != 200) {
-            log.error("Recommendation service error: {}", response);
+        try {
+            Response response = restTemplate.postForObject(resourceUrl, request, Response.class);
+
+            if (response == null || response.getStatus() != 200) {
+                log.error("Recommendation service error: {}", response);
+                throw new ExternalServiceException("Ошибка сервиса рекоммендаций");
+            }
+        } catch (Exception e) {
+            log.error("Recommendation service error: {}", e.getMessage());
             throw new ExternalServiceException("Сервис рекоммендаций временно недоступен");
         }
     }
