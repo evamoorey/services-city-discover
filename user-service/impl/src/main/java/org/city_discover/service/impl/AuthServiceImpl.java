@@ -16,6 +16,7 @@ import org.city_discover.service.EmailService;
 import org.city_discover.service.TokenService;
 import org.city_discover.service.UserService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.Optional;
@@ -39,6 +40,7 @@ public class AuthServiceImpl implements AuthService {
     private static final Integer MAX_NUM = 999_999;
 
     @Override
+    @Transactional
     public void sendEmailCode(String email) {
         String code = generateCode(MIN_NUM, MAX_NUM);
         AuthCodeEntity authCode = AuthCodeEntity.builder()
@@ -61,6 +63,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    @Transactional
     public TokenUserDto login(AuthCodeDto authCodeDto) {
         String email = authCodeDto.getEmail();
         String code = authCodeDto.getCode();
