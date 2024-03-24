@@ -2,6 +2,7 @@ package org.city_discover.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,9 +19,9 @@ public class PlaceCardUserDto {
 
     private String description;
 
-    @NotEmpty(message = "Координаты места должны быть заполнены")
+    @NotNull(message = "Координаты места должны быть заполнены")
     private Double latitude;
 
-    @NotEmpty(message = "Координаты места должны быть заполнены")
+    @NotNull(message = "Координаты места должны быть заполнены")
     private Double longitude;
 }

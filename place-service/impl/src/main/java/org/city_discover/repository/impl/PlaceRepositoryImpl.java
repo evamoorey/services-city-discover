@@ -6,8 +6,12 @@ import org.city_discover.entity.PlaceEntity;
 import org.city_discover.repository.PlaceRepository;
 import org.jooq.DSLContext;
 import org.jooq.exception.DataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -46,5 +50,19 @@ public class PlaceRepositoryImpl implements PlaceRepository {
         return dsl.selectFrom(PLACE)
                 .where(PLACE.NAME.eq(name))
                 .fetchOptionalInto(PlaceEntity.class);
+    }
+
+    @Override
+    public Page<PlaceEntity> findByUserId(UUID user, Pageable pageable) {
+        List<PlaceEntity> data = dsl.selectFrom(PLACE)
+                .where(PLACE.AUTHOR.eq(String.valueOf(user)))
+                .limit(pageable.getPageSize())
+                .offset(pageable.getOffset())
+                .fetchInto(PlaceEntity.class);
+
+        int total = dsl.fetchCount(dsl.selectFrom(PLACE)
+                .where(PLACE.AUTHOR.eq(String.valueOf(user))));
+
+        return new PageImpl<>(data, pageable, total);
     }
 }

@@ -10,6 +10,8 @@ import org.city_discover.exception.UnprocessableActionException;
 import org.city_discover.repository.PlaceRepository;
 import org.city_discover.service.PlaceService;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -48,5 +50,11 @@ public class PlaceServiceImpl implements PlaceService {
         });
 
         return modelMapper.map(place, PlaceCardDto.class);
+    }
+
+    @Override
+    public Page<PlaceCardDto> findByUserId(UUID user, Pageable pageable) {
+        return placeRepository.findByUserId(user, pageable)
+                .map(place -> modelMapper.map(place, PlaceCardDto.class));
     }
 }

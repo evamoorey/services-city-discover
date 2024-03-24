@@ -7,6 +7,8 @@ import org.city_discover.dto.PlaceCardDto;
 import org.city_discover.dto.PlaceCardUserDto;
 import org.city_discover.dto.wrapper.ErrorsMap;
 import org.city_discover.service.PlaceService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -41,5 +43,11 @@ public class PlaceControllerImpl implements PlaceController {
     public ResponseEntity<PlaceCardDto> findById(UUID id) {
         PlaceCardDto placeCard = placeService.findById(id);
         return new ResponseEntity<>(placeCard, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<Page<PlaceCardDto>> findByUserId(UUID id, Pageable pageable) {
+        Page<PlaceCardDto> places = placeService.findByUserId(id, pageable);
+        return new ResponseEntity<>(places, HttpStatus.OK);
     }
 }
