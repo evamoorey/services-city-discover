@@ -177,9 +177,10 @@ def get_user_info(user_id,db_path='places.db'):
     cur = conn.cursor()
     cur.execute(f'''
     SELECT * FROM Users 
-    WHERE id != {user_id}
+    WHERE id = '{user_id}'
     ''')
     user_info = cur.fetchone()
+
     conn.close()
 
     return user_info if user_info else None
@@ -193,11 +194,46 @@ def get_places(db_path='places.db'):
     conn.row_factory = sqlite3.Row
     cur = conn.cursor()
     cur.execute(f'''
-        SELECT * FROM Places 
+        SELECT id FROM Places 
         WHERE description != "Нет данных" AND image != "Нет данных"
         ''')
     places = cur.fetchall()
     conn.close()
+    places_list = [dict(place) for place in places]
+
+    return places_list if places_list else None
+
+
+def get_places_by_ids(ids, db_path='places.db'):
+    """
+    Fetches places from the Places table by a list of ids.
+    :param ids: List of place ids to fetch.
+    :param db_path: Path to the SQLite database file.
+    :return: List of dictionaries with place information or None if no places found.
+    """
+    # Проверяем, не пустой ли список ids
+    if not ids:
+        return None
+
+    # Создаем строку с плейсхолдерами для SQL-запроса
+    placeholders = ','.join('?' for _ in ids)
+
+    # Подключаемся к базе данных
+    conn = sqlite3.connect(db_path)
+    conn.row_factory = sqlite3.Row  # Устанавливаем row_factory для получения данных в виде словаря
+    cur = conn.cursor()
+
+    # Выполняем запрос, передавая список ids
+    cur.execute(f'''
+        SELECT * FROM Places 
+        WHERE id IN ({placeholders})
+    ''', ids)
+
+    # Получаем все строки
+    places = cur.fetchall()
+    conn.close()
+
+    # Преобразуем строки в список словарей
     places_list = [dict(place) for place in places]
 
     return places_list if places_list else None
@@ -255,7 +291,7 @@ def get_places_with_detailed_info(db_path='places.db', num=1):
     conn.row_factory = sqlite3.Row  # Установка row_factory для получения результатов в виде словаря
     cur = conn.cursor()
     cur.execute(f'''
-    SELECT * FROM Places 
+    SELECT * FROM FeaturesPlaces 
     WHERE description != "Нет данных" AND image != "Нет данных"
     ORDER BY RANDOM() LIMIT {num}
     ''')
@@ -288,7 +324,8 @@ def update_places(db_path, places_data):
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
 
-    for place in tqdm(places_data):
+    # Преобразование DataFrame в список словарей
+    for place in tqdm(places_data.to_dict('records')):
         cur.execute("""
             UPDATE Places
             SET image = ?, description = ?
@@ -323,6 +360,127 @@ def add_new_columns(db_path):
     conn.close()
 
 
+
+import sqlite3
+
+def remove_columns(db_path):
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+
+    # Создаем временную таблицу без колонок image и description
+    cur.execute("""
+        CREATE TEMPORARY TABLE IF NOT EXISTS Places_backup (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            category TEXT,
+            subcategory TEXT,
+            name TEXT NOT NULL,
+            address TEXT,
+            rating REAL,
+            reviews_count INTEGER,
+            pos1 REAL,
+            pos2 REAL
+        )
+    """)
+
+    # Копируем данные во временную таблицу, исключая колонки image и description
+    cur.execute("""
+        INSERT INTO Places_backup (id, category, subcategory, name, address, rating, reviews_count, pos1, pos2)
+        SELECT id, category, subcategory, name, address, rating, reviews_count, pos1, pos2 FROM Places
+    """)
+
+    # Удаляем оригинальную таблицу
+    cur.execute("DROP TABLE Places")
+
+    # Пересоздаем оригинальную таблицу без колонок image и description
+    cur.execute("""
+        CREATE TABLE Places (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            category TEXT,
+            subcategory TEXT,
+            name TEXT NOT NULL,
+            address TEXT,
+            rating REAL,
+            reviews_count INTEGER,
+            pos1 REAL,
+            pos2 REAL
+        )
+    """)
+
+    # Переносим данные обратно в оригинальную таблицу из временной
+    cur.execute("""
+        INSERT INTO Places (id, category, subcategory, name, address, rating, reviews_count, pos1, pos2)
+        SELECT id, category, subcategory, name, address, rating, reviews_count, pos1, pos2 FROM Places_backup
+    """)
+
+    # Удаляем временную таблицу
+    cur.execute("DROP TABLE Places_backup")
+
+    conn.commit()
+    conn.close()
+
+
+# remove_columns('places.db')
+
+def print_columns(db_path):
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+
+    # Получаем информацию о таблице
+    cur.execute("PRAGMA table_info(Places);")
+    columns = cur.fetchall()
+
+    # Выводим названия колонок
+    for col in columns:
+        print(col[1])  # индекс 1 содержит название колонки
+
+    conn.close()
+
+
+
+
+
+
+
+def create_features_places_table(db_path='places.db'):
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    cur.execute('''
+    DROP TABLE FeaturesPlaces;''')
+
+    cur.execute('''
+    CREATE TABLE IF NOT EXISTS FeaturesPlaces (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        category TEXT,
+        subcategory TEXT,
+        name TEXT NOT NULL,
+        address TEXT,
+        rating REAL,
+        image TEXT,
+        description TEXT,
+        reviews_count INTEGER,
+        pos1 REAL,
+        pos2 REAL
+    );''')
+
+    conn.commit()
+    conn.close()
+
+
+
+def insert_features_places_from_parquet(file_path, db_path='places.db'):
+    df = pd.read_parquet(file_path)
+    df['rating'] = df['rating'].replace('Нет данных', np.NAN).astype(float)
+    conn = sqlite3.connect(db_path)
+    df.to_sql('FeaturesPlaces', conn, if_exists='append', index=False)
+    conn.close()
+
+# create_features_places_table()
+# insert_features_places_from_parquet('full_data.parquet')
+
+# add_new_columns('places.db')
+# places_data = pd.read_parquet('updated_places.parquet')
+# update_places('places.db',places_data)
+# remove_columns('places.db')
 # db_path = 'places.db'
 # add_new_columns(db_path)
 #
