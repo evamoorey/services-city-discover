@@ -12,6 +12,8 @@ import org.city_discover.repository.UserRepository;
 import org.city_discover.service.RecommendationExternalService;
 import org.city_discover.service.UserService;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -95,6 +97,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public void delete(UUID userId) {
         userRepository.delete(userId);
+    }
+
+    @Override
+    public Page<UserPublicDto> findAll(String username, Pageable pageable) {
+        return userRepository.findAll(username, pageable);
+
     }
 
     private void checkUsername(String username) {

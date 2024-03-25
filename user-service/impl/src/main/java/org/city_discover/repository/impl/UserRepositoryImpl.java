@@ -1,15 +1,18 @@
 package org.city_discover.repository.impl;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.city_discover.dto.user.UserPublicDto;
 import org.city_discover.entity.UserEntity;
 import org.city_discover.repository.UserRepository;
 import org.jooq.DSLContext;
 import org.jooq.exception.DataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -77,5 +80,29 @@ public class UserRepositoryImpl implements UserRepository {
         dsl.deleteFrom(USER)
                 .where(USER.ID.eq(id))
                 .execute();
+    }
+
+    @Override
+    public Page<UserPublicDto> findAll(String username, Pageable pageable) {
+        if (username == null || username.isEmpty()) {
+            List<UserPublicDto> data = dsl.selectFrom(USER)
+                    .limit(pageable.getPageSize())
+                    .offset(pageable.getOffset())
+                    .fetchInto(UserPublicDto.class);
+
+            int total = dsl.fetchCount(dsl.selectFrom(USER));
+            return new PageImpl<>(data, pageable, total);
+        }
+
+        String pgUsername = "%" + username + "%";
+        List<UserPublicDto> data = dsl.selectFrom(USER)
+                .where(USER.USERNAME.likeIgnoreCase(pgUsername))
+                .limit(pageable.getPageSize())
+                .offset(pageable.getOffset())
+                .fetchInto(UserPublicDto.class);
+
+        int total = dsl.fetchCount(dsl.selectFrom(USER)
+                .where(USER.USERNAME.likeIgnoreCase(pgUsername)));
+        return new PageImpl<>(data, pageable, total);
     }
 }

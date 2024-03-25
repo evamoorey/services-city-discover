@@ -10,6 +10,7 @@ public class ControllerUrls {
 
     public static final String USER_URL = "/user";
     public static final String USER_ID_URL = "/user/{id}";
+    public static final String USERS_URL = "/users";
 
     public static final String SUBSCRIBE_URL = "/subscribe/{id}";
     public static final String UNSUBSCRIBE_URL = "/unsubscribe/{id}";

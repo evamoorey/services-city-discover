@@ -8,6 +8,8 @@ import org.city_discover.dto.user.UserPublicDto;
 import org.city_discover.dto.user.UserUpdateDto;
 import org.city_discover.dto.wrapper.ErrorsMap;
 import org.city_discover.service.UserService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -51,6 +53,13 @@ public class UserControllerImpl implements UserController {
         UserPublicDto user = userService.findBy(id);
 
         return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<Page<UserPublicDto>> findAll(String username, Pageable pageable) {
+        Page<UserPublicDto> users = userService.findAll(username, pageable);
+
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
     @Override
