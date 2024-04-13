@@ -7,7 +7,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.city_discover.constants.ControllerUrls;
 import org.city_discover.constants.SwaggerDefaultInformation;
 import org.city_discover.dto.PlaceCardDto;
-import org.city_discover.dto.PlaceCardUserDto;
+import org.city_discover.dto.PlaceCardCreateDto;
+import org.city_discover.dto.PlaceCardUpdateDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -27,7 +28,7 @@ public interface PlaceController {
 
     @PostMapping(path = ControllerUrls.PLACE_URL)
     @Operation(summary = "Создать карточку места")
-    ResponseEntity<?> create(@RequestBody @Validated PlaceCardUserDto placeCardDto,
+    ResponseEntity<?> create(@RequestBody @Validated PlaceCardCreateDto placeCardDto,
                              BindingResult bindingResult);
 
     @GetMapping(path = ControllerUrls.PLACE_ID_URL)
@@ -43,4 +44,6 @@ public interface PlaceController {
                                                     @PathVariable UUID id,
                                                     @Parameter(hidden = true)
                                                     @PageableDefault(size = 100) Pageable pageable);
+
+    ResponseEntity<?> update(PlaceCardUpdateDto placeCardDto, BindingResult bindingResult);
 }

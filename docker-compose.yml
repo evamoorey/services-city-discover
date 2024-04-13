@@ -50,6 +50,19 @@ services:
     ports:
       - "5441:5432"
 
+  minio:
+    image: docker.io/bitnami/minio:2022
+    ports:
+      - '9000:9000'
+      - '9001:9001'
+    networks:
+      - minionetwork
+    volumes:
+      - 'minio_data:/data'
+    environment:
+      - MINIO_ROOT_USER=minio_city
+      - MINIO_ROOT_PASSWORD=minio_city_2024
+
 volumes:
   pgdata_user:
   pgdata_place:

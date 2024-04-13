@@ -5,22 +5,17 @@
 
     <changeSet id="1" author="e.galyuta">
         <createTable tableName="place" remarks="Places">
-
             <column name="id" type="${uuid_type}" defaultValueComputed="${uuid_function}" remarks="Place ID">
                 <constraints primaryKey="true" primaryKeyName="pk_place_uuid"/>
             </column>
-
             <column name="name" type="varchar" remarks="Place name">
                 <constraints nullable="false"/>
             </column>
-
             <column name="description" type="varchar" remarks="Place description"/>
-
             <column name="creation_date" type="timestamp with time zone"
                     defaultValueComputed="${datatype.date.currentTimestamp}" remarks="Creation date">
                 <constraints nullable="false"/>
             </column>
-
             <column name="modification_date" type="timestamp with time zone"
                     defaultValueComputed="${datatype.date.currentTimestamp}" remarks="Modification date">
                 <constraints nullable="false"/>

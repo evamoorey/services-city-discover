@@ -26,3 +26,10 @@ spring:
 
 jwt:
   secret: "uR2djMIlRYULTTvgMdQMFkil5Ecg3qauWYfVbw0jQyTYx0a1Lm2bW9"
+
+minio:
+  minio-url: "http://minio:9000"
+  base-folder: "places"
+  bucket-name: "city-discover"
+  login: "minio_city"
+  password: "minio_city_2024"

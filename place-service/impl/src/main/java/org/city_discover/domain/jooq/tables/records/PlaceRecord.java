@@ -10,8 +10,8 @@ import java.util.UUID;
 import org.city_discover.domain.jooq.tables.Place;
 import org.jooq.Field;
 import org.jooq.Record1;
-import org.jooq.Record8;
-import org.jooq.Row8;
+import org.jooq.Record9;
+import org.jooq.Row9;
 import org.jooq.impl.UpdatableRecordImpl;
 
 
@@ -19,7 +19,7 @@ import org.jooq.impl.UpdatableRecordImpl;
  * Places
  */
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
-public class PlaceRecord extends UpdatableRecordImpl<PlaceRecord> implements Record8<UUID, String, String, Instant, Instant, String, Double, Double> {
+public class PlaceRecord extends UpdatableRecordImpl<PlaceRecord> implements Record9<UUID, String, String, Instant, Instant, String, Double, Double, String[]> {
 
     private static final long serialVersionUID = 1L;
 
@@ -137,6 +137,20 @@ public class PlaceRecord extends UpdatableRecordImpl<PlaceRecord> implements Rec
         return (Double) get(7);
     }
 
+    /**
+     * Setter for <code>public.place.photo_id</code>. Place photo ids
+     */
+    public void setPhotoId(String[] value) {
+        set(8, value);
+    }
+
+    /**
+     * Getter for <code>public.place.photo_id</code>. Place photo ids
+     */
+    public String[] getPhotoId() {
+        return (String[]) get(8);
+    }
+
     // -------------------------------------------------------------------------
     // Primary key information
     // -------------------------------------------------------------------------
@@ -147,17 +161,17 @@ public class PlaceRecord extends UpdatableRecordImpl<PlaceRecord> implements Rec
     }
 
     // -------------------------------------------------------------------------
-    // Record8 type implementation
+    // Record9 type implementation
     // -------------------------------------------------------------------------
 
     @Override
-    public Row8<UUID, String, String, Instant, Instant, String, Double, Double> fieldsRow() {
-        return (Row8) super.fieldsRow();
+    public Row9<UUID, String, String, Instant, Instant, String, Double, Double, String[]> fieldsRow() {
+        return (Row9) super.fieldsRow();
     }
 
     @Override
-    public Row8<UUID, String, String, Instant, Instant, String, Double, Double> valuesRow() {
-        return (Row8) super.valuesRow();
+    public Row9<UUID, String, String, Instant, Instant, String, Double, Double, String[]> valuesRow() {
+        return (Row9) super.valuesRow();
     }
 
     @Override
@@ -201,6 +215,11 @@ public class PlaceRecord extends UpdatableRecordImpl<PlaceRecord> implements Rec
     }
 
     @Override
+    public Field<String[]> field9() {
+        return Place.PLACE.PHOTO_ID;
+    }
+
+    @Override
     public UUID component1() {
         return getId();
     }
@@ -241,6 +260,11 @@ public class PlaceRecord extends UpdatableRecordImpl<PlaceRecord> implements Rec
     }
 
     @Override
+    public String[] component9() {
+        return getPhotoId();
+    }
+
+    @Override
     public UUID value1() {
         return getId();
     }
@@ -278,6 +302,11 @@ public class PlaceRecord extends UpdatableRecordImpl<PlaceRecord> implements Rec
     @Override
     public Double value8() {
         return getLongitude();
+    }
+
+    @Override
+    public String[] value9() {
+        return getPhotoId();
     }
 
     @Override
@@ -329,7 +358,13 @@ public class PlaceRecord extends UpdatableRecordImpl<PlaceRecord> implements Rec
     }
 
     @Override
-    public PlaceRecord values(UUID value1, String value2, String value3, Instant value4, Instant value5, String value6, Double value7, Double value8) {
+    public PlaceRecord value9(String[] value) {
+        setPhotoId(value);
+        return this;
+    }
+
+    @Override
+    public PlaceRecord values(UUID value1, String value2, String value3, Instant value4, Instant value5, String value6, Double value7, Double value8, String[] value9) {
         value1(value1);
         value2(value2);
         value3(value3);
@@ -338,6 +373,7 @@ public class PlaceRecord extends UpdatableRecordImpl<PlaceRecord> implements Rec
         value6(value6);
         value7(value7);
         value8(value8);
+        value9(value9);
         return this;
     }
 
@@ -355,7 +391,7 @@ public class PlaceRecord extends UpdatableRecordImpl<PlaceRecord> implements Rec
     /**
      * Create a detached, initialised PlaceRecord
      */
-    public PlaceRecord(UUID id, String name, String description, Instant creationDate, Instant modificationDate, String author, Double latitude, Double longitude) {
+    public PlaceRecord(UUID id, String name, String description, Instant creationDate, Instant modificationDate, String author, Double latitude, Double longitude, String[] photoId) {
         super(Place.PLACE);
 
         setId(id);
@@ -366,6 +402,7 @@ public class PlaceRecord extends UpdatableRecordImpl<PlaceRecord> implements Rec
         setAuthor(author);
         setLatitude(latitude);
         setLongitude(longitude);
+        setPhotoId(photoId);
         resetChangedOnNotNull();
     }
 }

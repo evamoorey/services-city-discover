@@ -4,7 +4,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.city_discover.dto.PlaceCardDto;
-import org.city_discover.dto.PlaceCardUserDto;
+import org.city_discover.dto.PlaceCardCreateDto;
+import org.city_discover.dto.PlaceCardUpdateDto;
 import org.city_discover.dto.wrapper.ErrorsMap;
 import org.city_discover.service.PlaceService;
 import org.springframework.data.domain.Page;
@@ -27,7 +28,7 @@ public class PlaceControllerImpl implements PlaceController {
     private final HttpServletRequest request;
 
     @Override
-    public ResponseEntity<?> create(PlaceCardUserDto placeCardDto, BindingResult bindingResult) {
+    public ResponseEntity<?> create(PlaceCardCreateDto placeCardDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             ErrorsMap errorsMap = getErrorsMap(bindingResult);
             return ResponseEntity.badRequest().body(errorsMap);
@@ -49,5 +50,18 @@ public class PlaceControllerImpl implements PlaceController {
     public ResponseEntity<Page<PlaceCardDto>> findByUserId(UUID id, Pageable pageable) {
         Page<PlaceCardDto> places = placeService.findByUserId(id, pageable);
         return new ResponseEntity<>(places, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<?> update(PlaceCardUpdateDto placeCardDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            ErrorsMap errorsMap = getErrorsMap(bindingResult);
+            return ResponseEntity.badRequest().body(errorsMap);
+        }
+
+        UUID userId = UUID.fromString((String) request.getAttribute("id"));
+        PlaceCardDto placeCard = placeService.update(placeCardDto, userId);
+
+        return new ResponseEntity<>(placeCard, HttpStatus.OK);
     }
 }

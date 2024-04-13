@@ -15,4 +15,6 @@ public interface PlaceRepository {
     Optional<PlaceEntity> findByName(String name);
 
     Page<PlaceEntity> findByUserId(UUID user, Pageable pageable);
+
+    PlaceEntity update(PlaceEntity entity);
 }

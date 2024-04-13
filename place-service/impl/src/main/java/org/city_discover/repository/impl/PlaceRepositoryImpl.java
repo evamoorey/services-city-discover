@@ -65,4 +65,18 @@ public class PlaceRepositoryImpl implements PlaceRepository {
 
         return new PageImpl<>(data, pageable, total);
     }
+
+    @Override
+    public PlaceEntity update(PlaceEntity entity) {
+        return dsl.update(PLACE)
+                .set(dsl.newRecord(PLACE, entity))
+                .returning()
+                .fetchOptional()
+                .orElseThrow(() -> {
+                    log.error("Error updating place with name: [{}]", entity.getName());
+                    return new DataAccessException("Ошибка при обновлении места с названием: [%s]"
+                            .formatted(entity.getName()));
+                })
+                .into(PlaceEntity.class);
+    }
 }

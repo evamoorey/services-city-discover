@@ -15,11 +15,11 @@ import org.city_discover.domain.jooq.Public;
 import org.city_discover.domain.jooq.tables.records.PlaceRecord;
 import org.jooq.Field;
 import org.jooq.ForeignKey;
-import org.jooq.Function8;
+import org.jooq.Function9;
 import org.jooq.Name;
 import org.jooq.Record;
 import org.jooq.Records;
-import org.jooq.Row8;
+import org.jooq.Row9;
 import org.jooq.Schema;
 import org.jooq.SelectField;
 import org.jooq.Table;
@@ -92,6 +92,11 @@ public class Place extends TableImpl<PlaceRecord> {
      * The column <code>public.place.longitude</code>. Place longitude
      */
     public final TableField<PlaceRecord, Double> LONGITUDE = createField(DSL.name("longitude"), SQLDataType.DOUBLE.nullable(false), this, "Place longitude");
+
+    /**
+     * The column <code>public.place.photo_id</code>. Place photo ids
+     */
+    public final TableField<PlaceRecord, String[]> PHOTO_ID = createField(DSL.name("photo_id"), SQLDataType.VARCHAR(36).array(), this, "Place photo ids");
 
     private Place(Name alias, Table<PlaceRecord> aliased) {
         this(alias, aliased, null);
@@ -181,18 +186,18 @@ public class Place extends TableImpl<PlaceRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row8 type methods
+    // Row9 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row8<UUID, String, String, Instant, Instant, String, Double, Double> fieldsRow() {
-        return (Row8) super.fieldsRow();
+    public Row9<UUID, String, String, Instant, Instant, String, Double, Double, String[]> fieldsRow() {
+        return (Row9) super.fieldsRow();
     }
 
     /**
      * Convenience mapping calling {@link SelectField#convertFrom(Function)}.
      */
-    public <U> SelectField<U> mapping(Function8<? super UUID, ? super String, ? super String, ? super Instant, ? super Instant, ? super String, ? super Double, ? super Double, ? extends U> from) {
+    public <U> SelectField<U> mapping(Function9<? super UUID, ? super String, ? super String, ? super Instant, ? super Instant, ? super String, ? super Double, ? super Double, ? super String[], ? extends U> from) {
         return convertFrom(Records.mapping(from));
     }
 
@@ -200,7 +205,7 @@ public class Place extends TableImpl<PlaceRecord> {
      * Convenience mapping calling {@link SelectField#convertFrom(Class,
      * Function)}.
      */
-    public <U> SelectField<U> mapping(Class<U> toType, Function8<? super UUID, ? super String, ? super String, ? super Instant, ? super Instant, ? super String, ? super Double, ? super Double, ? extends U> from) {
+    public <U> SelectField<U> mapping(Class<U> toType, Function9<? super UUID, ? super String, ? super String, ? super Instant, ? super Instant, ? super String, ? super Double, ? super Double, ? super String[], ? extends U> from) {
         return convertFrom(toType, Records.mapping(from));
     }
 }
