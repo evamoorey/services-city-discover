@@ -55,8 +55,6 @@ services:
     ports:
       - '9000:9000'
       - '9001:9001'
-    networks:
-      - minionetwork
     volumes:
       - 'minio_data:/data'
     environment:
@@ -66,3 +64,4 @@ services:
 volumes:
   pgdata_user:
   pgdata_place:
+  minio_data:
