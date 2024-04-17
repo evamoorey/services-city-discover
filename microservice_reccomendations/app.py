@@ -17,15 +17,17 @@ def prepare_inference_data(user_id, user_features, all_places):
     Возвращает DataFrame, подходящий для модели предсказания.
     """
     # Создаем список словарей, где каждый словарь соответствует одной строке в будущем DataFrame
-    data_rows = [{
+    data_rows = [pd.DataFrame({
         'user_id': user_id,
         'age': user_features['age'],
         'gender': user_features['gender'],
-        'place_id': row['place_id']  # Используем place_id напрямую из all_places
-    } for index, row in all_places.iterrows()]
+        'place_id': row['id']  # Используем place_id напрямую из all_places
+    }) for index, row in all_places.iterrows()]
 
     # Преобразуем список словарей в DataFrame
-    data = pd.DataFrame(data_rows)
+    data = pd.DataFrame(pd.concat(data_rows))
+    data['place_id'] = data['place_id'].astype('category')
+    data['gender'] = data['gender'].astype('category')
 
     return data
 
@@ -39,13 +41,21 @@ def model_recommendations():
 
     # Получаем параметр num из query-строки, используем 20 как значение по умолчанию
     num = request.args.get('num', default=20, type=int)
-    user_id = request.args.get('user_id', default='user_id_123123123123', type=int)
+    user_id = request.args.get('user_id', default='user_id_123123123123', type=str)
 
-    all_places = database.get_places(num=num)
+    all_places = pd.DataFrame(database.get_places())
     # Подготовка данных для инференса
-    user_id = 16
     user_data = database.get_user_info(user_id)
-    user_features = {'age': user_data['age'], 'gender': user_data['gender']}
+    print(user_data)
+    if user_data == None:
+        return jsonify({"error": f"No such user {user_id}"}), 404
+
+    user_data_dict = dict(user_data)
+    # Создаем DataFrame из словаря
+    user_data_df = pd.DataFrame([user_data_dict])
+
+    user_features = {'age': user_data_df['age'], 'gender': user_data_df['gender']}
+    user_features = pd.DataFrame(user_features)
     X_infer = prepare_inference_data(user_id, user_features, all_places)
 
     # Загрузка модели
@@ -66,8 +76,8 @@ def model_recommendations():
     # Выбираем топ-N мест
     top_n_recommendations = X_infer_sorted.head(num)
 
-    if top_n_recommendations:
-        return jsonify(top_n_recommendations)
+    if not(top_n_recommendations.empty):
+        return database.get_places_by_ids(list(top_n_recommendations['place_id']))
     else:
         return jsonify({"error": f"No places found for user {user_id}"}), 404
 
@@ -123,6 +133,38 @@ def recommendations():
         return jsonify(places)
     else:
         return jsonify({"error": "No places found"}), 404
+
+@app.route('/map', methods=['GET'])
+def places_and_clusters():
+    coords = request.args.get('p')
+
+    if not coords:
+        return jsonify({"error": "Missing coordinates"}), 400
+
+    try:
+        top_left, bottom_right = coords.split(';')
+        pos2_max, pos1_min = map(float, top_left.split(','))
+        pos2_min, pos1_max = map(float, bottom_right.split(','))
+    except (ValueError, TypeError):
+        return jsonify({"error": "Invalid coordinates format"}), 400
+
+    # Вычисляем площадь прямоугольника
+    area = database.haversine(pos1_min, pos2_min, pos1_max, pos2_min) * database.haversine(pos1_min, pos2_min, pos1_min, pos2_max)
+
+    # Динамически настраиваем cluster_radius на основе площади
+    if area <= 1:
+        cluster_radius = 0.05  # Меньший радиус для малой площади
+    elif area <= 7:
+        cluster_radius = 0.1
+    elif area <= 15:
+        cluster_radius = 0.15
+    elif area <= 25:
+        cluster_radius = 0.25  # Средний радиус для средней площади
+    else:
+        cluster_radius = 0.45  # Больший радиус для большой площади
+
+    result = database.get_places_and_clusters(pos2_max, pos1_min, pos2_min, pos1_max, cluster_radius)
+    return jsonify(result)
 
 @app.route('/')
 def home():
