@@ -4,6 +4,8 @@ import numpy as np
 import pandas as pd
 from tqdm import tqdm
 import json
+import sqlite3
+from math import radians, cos, sin, asin, sqrt
 
 
 def insert_categories_and_subcategories(db_path='places.db', categories_file='categories.csv', subcategories_file='subcategories.csv'):
@@ -304,6 +306,7 @@ def get_places_with_detailed_info(db_path='places.db', num=1):
         place_dict = dict(place)
         # Разделение строки изображений по ';' и обновление значения в словаре
         place_dict['image'] = place_dict['image'].split(';')
+
         places_list.append(place_dict)
 
     return places_list if places_list else None
@@ -466,6 +469,78 @@ def create_features_places_table(db_path='places.db'):
     conn.close()
 
 
+
+def haversine(lon1, lat1, lon2, lat2):
+    lon1, lat1, lon2, lat2 = map(radians, [lon1, lat1, lon2, lat2])
+    dlon = lon2 - lon1
+    dlat = lat2 - lat1
+    a = sin(dlat/2)**2 + cos(lat1) * cos(lat2) * sin(dlon/2)**2
+    c = 2 * asin(sqrt(a))
+    r = 6371
+    return c * r
+
+def get_places_and_clusters(pos2_max, pos1_min, pos2_min, pos1_max, cluster_radius=0.5):
+    """pos2_max - максимальная широта (верхний левый угол)
+pos1_min - минимальная долгота (верхний левый угол)
+pos2_min - минимальная широта (нижний правый угол)
+pos1_max - максимальная долгота (нижний правый угол)"""
+
+    conn = sqlite3.connect('places.db')
+    cur = conn.cursor()
+
+    cur.execute('''
+        SELECT id, name, category, pos1, pos2
+        FROM Places
+        WHERE pos2 BETWEEN ? AND ? AND pos1 BETWEEN ? AND ?
+    ''', (pos2_min, pos2_max, pos1_min, pos1_max))
+
+    places = cur.fetchall()
+    print(len(places))
+
+    clusters = {}
+    result = []
+
+    for place in places:
+        place_id, name, category, pos1, pos2 = place
+
+        # Check if the place belongs to any existing cluster
+        belongs_to_cluster = False
+        for cluster in clusters.values():
+            if haversine(pos1, pos2, cluster['pos1'], cluster['pos2']) <= cluster_radius:
+                cluster['count'] += 1
+                belongs_to_cluster = True
+                break
+
+        if not belongs_to_cluster:
+            # Check if the place is close to any other non-clustered place
+            for other_place in result:
+                if 'cluster' not in other_place and haversine(pos1, pos2, other_place['pos1'], other_place['pos2']) <= cluster_radius:
+                    cluster_id = f"cluster_{len(clusters)}"
+                    clusters[cluster_id] = {
+                        'id': cluster_id,
+                        'pos1': (pos1 + other_place['pos1']) / 2,
+                        'pos2': (pos2 + other_place['pos2']) / 2,
+                        'count': 2
+                    }
+                    result.remove(other_place)
+                    belongs_to_cluster = True
+                    break
+
+            if not belongs_to_cluster:
+                # Add the place as a separate object
+                result.append({
+                    'id': place_id,
+                    'name': name,
+                    'category': category,
+                    'pos1': pos1,
+                    'pos2': pos2
+                })
+
+    # Add clusters to the result
+    result.extend(clusters.values())
+
+    conn.close()
+    return result
 
 def insert_features_places_from_parquet(file_path, db_path='places.db'):
     df = pd.read_parquet(file_path)
