@@ -2,6 +2,7 @@ package org.city_discover.controller;
 
 import lombok.AllArgsConstructor;
 import org.city_discover.service.MinioAdapter;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,6 +22,8 @@ public class PlacePhotoControllerImpl implements PlacePhotoController {
 
     @Override
     public ResponseEntity<byte[]> upload(UUID id) {
-        return ResponseEntity.ok().body(minioAdapter.download(id));
+        return ResponseEntity.ok()
+                .contentType(MediaType.IMAGE_PNG)
+                .body(minioAdapter.download(id));
     }
 }
