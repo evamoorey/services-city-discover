@@ -5,23 +5,21 @@ import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.IOUtils;
 import org.city_discover.exception.MinioAccessException;
 import org.city_discover.properties.MinioProperties;
-import org.city_discover.service.MinioService;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.stereotype.Service;
+import org.city_discover.service.MinioAdapter;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import reactor.core.publisher.Mono;
-import reactor.core.scheduler.Schedulers;
 
 import java.io.InputStream;
 import java.util.UUID;
 
-@Service
+@Component
 @Slf4j
 @AllArgsConstructor
-public class MinioServiceImpl implements MinioService {
+public class MinioAdapterImpl implements MinioAdapter {
     private final MinioClient minioClient;
     private final MinioProperties properties;
 
@@ -41,18 +39,19 @@ public class MinioServiceImpl implements MinioService {
             );
             return uuid;
         } catch (Exception e) {
-            throw new MinioAccessException("Ошибка сохранения файла");
+            throw new MinioAccessException("Ошибка сохранения файла" );
         }
     }
 
     @Override
-    public Mono<InputStreamResource> download(UUID id) {
-        return Mono.fromCallable(() -> {
-            InputStream response = minioClient.getObject(GetObjectArgs.builder()
-                    .bucket(properties.getBucketName())
-                    .object(id.toString())
-                    .build());
-            return new InputStreamResource(response);
-        }).subscribeOn(Schedulers.boundedElastic());
+    public byte[] download(UUID id) {
+        try (InputStream is = minioClient.getObject(GetObjectArgs.builder()
+                .bucket(properties.getBucketName())
+                .object(id.toString())
+                .build())) {
+            return IOUtils.toByteArray(is);
+        } catch (Exception e) {
+            throw new MinioAccessException("Ошибка загрузки файла" );
+        }
     }
 }
