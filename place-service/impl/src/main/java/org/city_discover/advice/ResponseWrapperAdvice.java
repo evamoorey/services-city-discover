@@ -12,7 +12,7 @@ import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
-@RestControllerAdvice(assignableTypes = {PlaceController.class, PlacePhotoController.class})
+@RestControllerAdvice(assignableTypes = {PlaceController.class})
 @Slf4j
 public class ResponseWrapperAdvice implements ResponseBodyAdvice<Object> {
 
