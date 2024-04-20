@@ -4,5 +4,3 @@ pandas
 tqdm
 catboost
 numpy
-sqlite3
-pickle
