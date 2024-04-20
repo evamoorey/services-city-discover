@@ -3,8 +3,8 @@ package org.city_discover.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.city_discover.dto.PlaceCardDto;
 import org.city_discover.dto.PlaceCardCreateDto;
+import org.city_discover.dto.PlaceCardDto;
 import org.city_discover.dto.PlaceCardUpdateDto;
 import org.city_discover.dto.wrapper.ErrorsMap;
 import org.city_discover.service.PlaceService;
@@ -34,7 +34,7 @@ public class PlaceControllerImpl implements PlaceController {
             return ResponseEntity.badRequest().body(errorsMap);
         }
 
-        UUID userId = UUID.fromString((String) request.getAttribute("id"));
+        UUID userId = UUID.fromString((String) request.getAttribute("id" ));
         PlaceCardDto placeCard = placeService.create(userId, placeCardDto);
 
         return new ResponseEntity<>(placeCard, HttpStatus.OK);
@@ -53,14 +53,14 @@ public class PlaceControllerImpl implements PlaceController {
     }
 
     @Override
-    public ResponseEntity<?> update(PlaceCardUpdateDto placeCardDto, BindingResult bindingResult) {
+    public ResponseEntity<?> update(UUID id, PlaceCardUpdateDto placeCardDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             ErrorsMap errorsMap = getErrorsMap(bindingResult);
             return ResponseEntity.badRequest().body(errorsMap);
         }
 
-        UUID userId = UUID.fromString((String) request.getAttribute("id"));
-        PlaceCardDto placeCard = placeService.update(placeCardDto, userId);
+        UUID userId = UUID.fromString((String) request.getAttribute("id" ));
+        PlaceCardDto placeCard = placeService.update(id, placeCardDto, userId);
 
         return new ResponseEntity<>(placeCard, HttpStatus.OK);
     }

@@ -13,7 +13,6 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PlaceCardUpdateDto {
-    private UUID id;
 
     @NotBlank(message = "Название места должно быть заполнено")
     private String name;

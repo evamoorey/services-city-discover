@@ -49,7 +49,7 @@ public class PlaceServiceImpl implements PlaceService {
     public PlaceCardDto findById(UUID id) {
         PlaceEntity place = placeRepository.findById(id).orElseThrow(() -> {
             log.error("Place don't exists with id: [{}]", id);
-            return new NoSuchEntityException("Место не существует.");
+            return new NoSuchEntityException("Место не существует." );
         });
 
         return modelMapper.map(place, PlaceCardDto.class);
@@ -63,8 +63,8 @@ public class PlaceServiceImpl implements PlaceService {
 
     @Override
     @Transactional
-    public PlaceCardDto update(PlaceCardUpdateDto dto, UUID user) {
-        PlaceEntity place = placeRepository.findById(dto.getId())
+    public PlaceCardDto update(UUID id, PlaceCardUpdateDto dto, UUID user) {
+        PlaceEntity place = placeRepository.findById(id)
                 .orElseThrow(() -> {
                     log.error("Place not exists with name: [{}]", dto.getName());
                     return new UnprocessableActionException("Место с названием %s не существует."
@@ -73,10 +73,11 @@ public class PlaceServiceImpl implements PlaceService {
 
         if (!place.getAuthor().equals(user.toString())) {
             log.error("User with id [{}] not author for place [{}]", user, dto.getName());
-            throw new UnprocessableActionException("Нет прав для редактирвоания места.");
+            throw new UnprocessableActionException("Нет прав для редактирвоания места." );
         }
 
         PlaceEntity entity = modelMapper.map(dto, PlaceEntity.class);
+        entity.setId(place.getId());
         entity.setName(place.getName());
         entity.setCreationDate(place.getCreationDate());
         entity.setModificationDate(Instant.now());
