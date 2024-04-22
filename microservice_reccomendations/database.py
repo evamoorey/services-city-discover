@@ -137,6 +137,96 @@ def create_tables(db_path='places.db'):
     conn.commit()
     conn.close()
 
+
+def get_user_preferences(user_id, db_path='places.db'):
+    """
+    Получает предпочтения пользователя из таблицы Preferences.
+
+    :param user_id: Идентификатор пользователя.
+    :return: Список словарей, каждый из которых представляет предпочтение пользователя.
+    """
+    # Подключение к базе данных
+    conn = sqlite3.connect(db_path)
+    conn.row_factory = sqlite3.Row
+    cur = conn.cursor()
+
+    # SQL запрос для извлечения предпочтений пользователя
+    query = """
+    SELECT subcategory_id, mark FROM Preferences
+    WHERE user_id = ?
+    """
+    cur.execute(query, (user_id,))
+
+    # Извлекаем результаты запроса
+    preferences = []
+    rows = cur.fetchall()
+    for row in rows:
+        preference = {
+            'subcategory_id': row[0],
+            'mark': row[1]
+        }
+        preferences.append(preference)
+
+    # Закрытие соединения с базой данных
+    cur.close()
+    conn.close()
+
+    return preferences
+
+
+def get_places_by_subcategory(subcategory_id, db_path='places.db'):
+    """
+    Извлекает список идентификаторов мест из базы данных, соответствующих заданной подкатегории.
+
+    :param subcategory_id: Идентификатор подкатегории.
+    :return: Список идентификаторов мест.
+    """
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+
+    # Исправленный SQL запрос с указанием таблицы для каждого столбца
+    query = """
+    SELECT Places.id FROM Places
+    JOIN Subcategories ON Places.subcategory = Subcategories.name
+    WHERE Subcategories.id = ?
+    """
+    cur.execute(query, (subcategory_id,))
+    rows = cur.fetchall()
+    place_ids = [row[0] for row in rows]  # Извлекаем только идентификаторы мест
+
+    cur.close()
+    conn.close()
+
+    return place_ids
+
+
+
+
+def check_user_history(user_id, db_path='places.db'):
+    """
+    Проверяет наличие истории взаимодействий пользователя в таблице Visits.
+
+    :param user_id: Идентификатор пользователя.
+    :return: True, если история существует, иначе False.
+    """
+    # Соединение с базой данных
+    conn = sqlite3.connect(db_path)
+    conn.row_factory = sqlite3.Row
+    cur = conn.cursor()
+
+    # SQL запрос для проверки наличия записей пользователя
+    query = "SELECT 1 FROM Visits WHERE user_id = ? LIMIT 1"
+    cur.execute(query, (user_id,))
+    result = cur.fetchone()  # Получаем одну запись, если она есть
+
+    # Закрываем соединение с базой данных
+    cur.close()
+    conn.close()
+
+    return result is not None  # Возвращаем True, если запись найдена, иначе False
+
+
+
 def get_categories_with_subcategories(db_path='places.db'):
     # Подключаемся к базе данных
     conn = sqlite3.connect(db_path)
@@ -195,9 +285,22 @@ def get_places(db_path='places.db'):
     conn = sqlite3.connect(db_path)
     conn.row_factory = sqlite3.Row
     cur = conn.cursor()
+    # cur.execute(f'''
+    #     SELECT id,
+    #     pos1,
+    #     pos2,
+    #     category,
+    #     subcategory
+    #     FROM Places
+    #     WHERE description != "Нет данных" AND image != "Нет данных"
+    #     ''')
     cur.execute(f'''
-        SELECT id FROM Places 
-        WHERE description != "Нет данных" AND image != "Нет данных"
+        SELECT id,
+        pos1,
+        pos2,
+        category,
+        subcategory
+        FROM Places
         ''')
     places = cur.fetchall()
     conn.close()
@@ -431,10 +534,7 @@ def print_columns(db_path):
     # Получаем информацию о таблице
     cur.execute("PRAGMA table_info(Places);")
     columns = cur.fetchall()
-
-    # Выводим названия колонок
-    for col in columns:
-        print(col[1])  # индекс 1 содержит название колонки
+    print(columns)
 
     conn.close()
 
@@ -548,6 +648,118 @@ def insert_features_places_from_parquet(file_path, db_path='places.db'):
     conn = sqlite3.connect(db_path)
     df.to_sql('FeaturesPlaces', conn, if_exists='append', index=False)
     conn.close()
+
+
+def get_all_places(db_path='places.db'):
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+
+    cur.execute('''
+    SELECT 
+     id,
+     age,
+     gender
+     FROM Users
+    ''')
+    visits = cur.fetchall()
+
+    conn.commit()
+    conn.close()
+
+    return visits
+
+
+
+
+
+def print_first_five_rows(db_path, column_name, table_name):
+    """
+    Печатает первые 5 строк заданного столбца из указанной таблицы.
+
+    :param db_path: Путь к файлу базы данных.
+    :param column_name: Имя столбца для вывода.
+    :param table_name: Имя таблицы, из которой производится выборка.
+    """
+    # Подключение к базе данных
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+
+    # Подготовка SQL запроса
+    query = f"SELECT {column_name} FROM {table_name} LIMIT 5;"
+
+    # Выполнение запроса
+    cur.execute(query)
+    rows = cur.fetchall()
+
+    # Вывод результатов
+    for row in rows:
+        print(row[0])  # Печатаем значение столбца
+
+    # Закрытие соединения с базой данных
+    cur.close()
+    conn.close()
+
+
+
+def add_user_rating(user_id, place_id, rating):
+    """
+    Adds a user's rating for a place to the UserRatings table.
+
+    :param user_id: ID of the user.
+    :param place_id: ID of the place.
+    :param rating: Rating given by the user.
+    :return: True if the rating is added successfully, False otherwise.
+    """
+    try:
+        conn = sqlite3.connect('places.db')
+        cur = conn.cursor()
+
+        cur.execute('''
+            INSERT INTO UserRatings (user_id, place_id, rating)
+            VALUES (?, ?, ?)
+        ''', (user_id, place_id, rating))
+
+        conn.commit()
+        return True
+    except sqlite3.Error as e:
+        print(f"Error adding user rating: {e}")
+        return False
+    finally:
+        if conn:
+            conn.close()
+
+def add_user_view(user_id, place_id):
+    """
+    Adds a user's view of a place's detailed information to the UserViews table.
+
+    :param user_id: ID of the user.
+    :param place_id: ID of the place.
+    :return: True if the view is recorded successfully, False otherwise.
+    """
+    try:
+        conn = sqlite3.connect('places.db')
+        cur = conn.cursor()
+
+        cur.execute('''
+            INSERT INTO UserViews (user_id, place_id)
+            VALUES (?, ?)
+        ''', (user_id, place_id))
+
+        conn.commit()
+        return True
+    except sqlite3.Error as e:
+        print(f"Error recording user view: {e}")
+        return False
+    finally:
+        if conn:
+            conn.close()
+
+
+
+# data = get_all_places()
+#
+# df = pd.DataFrame(data,columns=['id','age','gender'])
+# df.to_parquet('users_full.parquet')
 
 # create_features_places_table()
 # insert_features_places_from_parquet('full_data.parquet')
