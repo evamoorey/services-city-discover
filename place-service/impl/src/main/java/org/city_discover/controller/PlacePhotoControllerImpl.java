@@ -21,7 +21,7 @@ public class PlacePhotoControllerImpl implements PlacePhotoController {
     }
 
     @Override
-    public ResponseEntity<byte[]> upload(UUID id) {
+    public ResponseEntity<byte[]> download(UUID id) {
         return ResponseEntity.ok()
                 .contentType(MediaType.IMAGE_PNG)
                 .body(minioAdapter.download(id));

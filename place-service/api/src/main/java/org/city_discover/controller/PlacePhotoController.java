@@ -23,5 +23,5 @@ public interface PlacePhotoController {
 
     @GetMapping(path = ControllerUrls.PLACE_PHOTO_URL)
     @Operation(summary = "Скачать фото места" )
-    ResponseEntity<byte[]> upload(@RequestParam(value = "fileId" ) UUID id);
+    ResponseEntity<byte[]> download(@RequestParam(value = "fileId" ) UUID id);
 }
