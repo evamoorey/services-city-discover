@@ -5,6 +5,7 @@ package org.city_discover.domain.jooq;
 
 
 import org.city_discover.domain.jooq.tables.Kitty;
+import org.city_discover.domain.jooq.tables.Owner;
 
 
 /**
@@ -17,4 +18,9 @@ public class Tables {
      * Kitties
      */
     public static final Kitty KITTY = Kitty.KITTY;
+
+    /**
+     * Owners
+     */
+    public static final Owner OWNER = Owner.OWNER;
 }

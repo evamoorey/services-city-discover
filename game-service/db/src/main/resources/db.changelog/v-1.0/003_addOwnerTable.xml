@@ -1,0 +1,20 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+    <changeSet id="2" author="e.galyuta">
+        <createTable tableName="owner" remarks="Owners">
+
+            <column name="owner_id" type="${uuid_type}" remarks="Owner id">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="kitty_id" type="${uuid_type}" remarks="Kitty id">
+                <constraints foreignKeyName="fk_owner_kitty_id" references="kitty(id)"/>
+            </column>
+
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>

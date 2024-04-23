@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.city_discover.domain.jooq.tables.Kitty;
+import org.city_discover.domain.jooq.tables.Owner;
 import org.jooq.Catalog;
 import org.jooq.Table;
 import org.jooq.impl.SchemaImpl;
@@ -32,6 +33,11 @@ public class Public extends SchemaImpl {
     public final Kitty KITTY = Kitty.KITTY;
 
     /**
+     * Owners
+     */
+    public final Owner OWNER = Owner.OWNER;
+
+    /**
      * No further instances allowed
      */
     private Public() {
@@ -47,7 +53,8 @@ public class Public extends SchemaImpl {
     @Override
     public final List<Table<?>> getTables() {
         return Arrays.asList(
-            Kitty.KITTY
+            Kitty.KITTY,
+            Owner.OWNER
         );
     }
 }
