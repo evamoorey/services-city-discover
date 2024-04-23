@@ -33,7 +33,7 @@ public class MinioAdapterImpl implements MinioAdapter {
                     PutObjectArgs
                             .builder()
                             .bucket(properties.getBucketName())
-                            .object(uuid.toString())
+                            .object(properties.getBaseFolder() + "/" + uuid)
                             .stream(file.getInputStream(), file.getSize(), 5242880)
                             .build()
             );
@@ -47,7 +47,7 @@ public class MinioAdapterImpl implements MinioAdapter {
     public byte[] download(UUID id) {
         try (InputStream is = minioClient.getObject(GetObjectArgs.builder()
                 .bucket(properties.getBucketName())
-                .object(id.toString())
+                .object(properties.getBaseFolder() + "/" + id.toString())
                 .build())) {
             return IOUtils.toByteArray(is);
         } catch (Exception e) {
