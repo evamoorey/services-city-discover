@@ -5,10 +5,13 @@ import org.city_discover.entity.OwnerEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.Optional;
 import java.util.UUID;
 
 public interface OwnerRepository {
     OwnerEntity insert(OwnerEntity entity);
 
     Page<KittyEntity> findByOwnerId(UUID user, Pageable pageable);
+
+    Optional<KittyEntity> findByOwnerKitty(UUID user, UUID kitty);
 }

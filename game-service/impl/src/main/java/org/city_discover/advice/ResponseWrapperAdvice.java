@@ -2,7 +2,7 @@ package org.city_discover.advice;
 
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import org.city_discover.controller.GameKittyController;
+import org.city_discover.controller.KittyController;
 import org.city_discover.dto.wrapper.ResponseWrappedDto;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
@@ -11,7 +11,7 @@ import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
-@RestControllerAdvice(assignableTypes = {GameKittyController.class})
+@RestControllerAdvice(assignableTypes = {KittyController.class})
 @Slf4j
 public class ResponseWrapperAdvice implements ResponseBodyAdvice<Object> {
 

@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.city_discover.domain.jooq.tables.Kitty.KITTY;
@@ -68,5 +69,10 @@ public class OwnerRepositoryImpl implements OwnerRepository {
                 .on(OWNER.KITTY_ID.eq(KITTY.ID))
                 .where(OWNER.OWNER_ID.eq(user)));
         return new PageImpl<>(data, pageable, total);
+    }
+
+    @Override
+    public Optional<KittyEntity> findByOwnerKitty(UUID user, UUID kitty) {
+        return Optional.empty();
     }
 }

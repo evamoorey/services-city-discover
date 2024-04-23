@@ -13,7 +13,7 @@ import java.util.UUID;
 @RestController
 @AllArgsConstructor
 @Slf4j
-public class GameKittyPhotoControllerImpl implements GameKittyPhotoController {
+public class KittyPhotoControllerImpl implements KittyPhotoController {
 
     private final MinioAdapter minioAdapter;
 
