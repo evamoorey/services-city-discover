@@ -37,6 +37,7 @@ services:
       - "8051:8050"
     depends_on:
       - postgres-place
+      - minio
 
   postgres-place:
     image: postgres
@@ -49,6 +50,27 @@ services:
       - pgdata_place:/var/lib/postgresql/data
     ports:
       - "5441:5432"
+        
+  game-service:
+    build:
+      context: ./game-service
+      dockerfile: Dockerfile
+    ports:
+      - "8052:8050"
+    depends_on:
+      - minio
+
+  postgres-game:
+    image: postgres
+    environment:
+      POSTGRES_DB: "game_info"
+      POSTGRES_USER: "city-discover-user"
+      POSTGRES_PASSWORD: "city-discover-2024"
+      PGDATA: "/var/lib/postgresql/data/pgdata"
+    volumes:
+      - pgdata_game:/var/lib/postgresql/data
+    ports:
+      - "5442:5432"
 
   minio:
     image: docker.io/bitnami/minio:2022
@@ -64,4 +86,5 @@ services:
 volumes:
   pgdata_user:
   pgdata_place:
+  pgdata_game:
   minio_data:
