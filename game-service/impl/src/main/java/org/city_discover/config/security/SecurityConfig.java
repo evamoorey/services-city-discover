@@ -26,9 +26,7 @@ public class SecurityConfig extends OncePerRequestFilter {
     private HandlerExceptionResolver resolver;
 
     private final TokenService tokenService;
-    private static final Set<String> whitelistURI = Set.of(
-            "/place-service"
-    );
+    private static final Set<String> whitelistURI = Set.of();
 
     private static final Set<String> swaggerURI = Set.of(
             "/game-service/swagger-ui",
