@@ -31,8 +31,8 @@ public class SecurityConfig extends OncePerRequestFilter {
     );
 
     private static final Set<String> swaggerURI = Set.of(
-            "/place-service/swagger-ui",
-            "/place-service/v3/api-docs");
+            "/game-service/swagger-ui",
+            "/game-service/v3/api-docs");
 
     public SecurityConfig(TokenService tokenService) {
         this.tokenService = tokenService;
