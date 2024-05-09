@@ -49,7 +49,7 @@ public class PlaceServiceImpl implements PlaceService {
     public PlaceCardDto findById(UUID id) {
         PlaceEntity place = placeRepository.findById(id).orElseThrow(() -> {
             log.error("Place don't exists with id: [{}]", id);
-            return new NoSuchEntityException("Место не существует." );
+            return new NoSuchEntityException("Место не существует.");
         });
 
         return modelMapper.map(place, PlaceCardDto.class);
@@ -73,7 +73,7 @@ public class PlaceServiceImpl implements PlaceService {
 
         if (!place.getAuthor().equals(user.toString())) {
             log.error("User with id [{}] not author for place [{}]", user, dto.getName());
-            throw new UnprocessableActionException("Нет прав для редактирвоания места." );
+            throw new UnprocessableActionException("Нет прав для редактирвоания места.");
         }
 
         PlaceEntity entity = modelMapper.map(dto, PlaceEntity.class);
@@ -100,5 +100,16 @@ public class PlaceServiceImpl implements PlaceService {
         }
 
         placeRepository.delete(placeId);
+    }
+
+    @Override
+    public void deleteAdmin(UUID id) {
+        placeRepository.findById(id)
+                .orElseThrow(() -> {
+                    log.error("Place not exists with id: [{}]", id);
+                    return new UnprocessableActionException("Место с названием не существует.");
+                });
+
+        placeRepository.delete(id);
     }
 }

@@ -29,6 +29,10 @@ public class SecurityConfig extends OncePerRequestFilter {
     private static final Set<String> whitelistURI = Set.of(
     );
 
+    private static final Set<String> adminURI = Set.of(
+            "/place-service/admin"
+    );
+
     private static final Set<String> swaggerURI = Set.of(
             "/place-service/swagger-ui",
             "/place-service/v3/api-docs");
@@ -41,10 +45,14 @@ public class SecurityConfig extends OncePerRequestFilter {
     protected void doFilterInternal(@NotNull HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) {
         try {
             String authorization = request.getHeader("Authorization");
-            tokenService.verifyToken(authorization);
 
-            Object userId = getUserFromToken(authorization);
-            request.setAttribute("id", userId);
+            if (adminURI.stream().anyMatch(request.getRequestURI()::contains)) {
+                tokenService.verifyAdmin(authorization);
+            } else {
+                tokenService.verifyToken(authorization);
+                Object userId = getUserFromToken(authorization);
+                request.setAttribute("id", userId);
+            }
 
             filterChain.doFilter(request, response);
         } catch (Exception e) {

@@ -30,7 +30,7 @@ spring:
     sender:
       username: "citydiscover"
       email: "citydiscover@yandex.ru"
-      password: "obfgzdhmpgjvynvp"
+      password: "..."
     protocol: "smtp"
 
 jwt:

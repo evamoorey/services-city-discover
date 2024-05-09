@@ -18,4 +18,6 @@ public interface PlaceService {
     PlaceCardDto update(UUID id, PlaceCardUpdateDto dto, UUID user);
 
     void delete(UUID userId, UUID id);
+
+    void deleteAdmin(UUID id);
 }

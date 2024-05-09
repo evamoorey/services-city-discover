@@ -11,4 +11,5 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "jwt")
 public class JWTProperties {
     private String secret;
+    private String adminSecret;
 }
