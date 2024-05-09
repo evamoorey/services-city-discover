@@ -15,10 +15,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
@@ -51,4 +48,9 @@ public interface PlaceController {
                              @PathVariable UUID id,
                              @RequestBody PlaceCardUpdateDto placeCardDto,
                              BindingResult bindingResult);
+
+    @DeleteMapping(path = ControllerUrls.PLACE_ID_URL)
+    @Operation(summary = "Удалить карточку места пользователя" )
+    ResponseEntity<Boolean> delete(@Parameter(description = "ID карточки места" )
+                             @PathVariable UUID id);
 }

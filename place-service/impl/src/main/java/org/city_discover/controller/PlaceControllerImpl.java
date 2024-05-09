@@ -64,4 +64,12 @@ public class PlaceControllerImpl implements PlaceController {
 
         return new ResponseEntity<>(placeCard, HttpStatus.OK);
     }
+
+    @Override
+    public ResponseEntity<Boolean> delete(UUID id) {
+        UUID userId = UUID.fromString((String) request.getAttribute("id" ));
+        placeService.delete(userId, id);
+
+        return new ResponseEntity<>(true, HttpStatus.OK);
+    }
 }

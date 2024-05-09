@@ -85,4 +85,20 @@ public class PlaceServiceImpl implements PlaceService {
         PlaceEntity updated = placeRepository.update(entity);
         return modelMapper.map(updated, PlaceCardDto.class);
     }
+
+    @Override
+    public void delete(UUID userId, UUID placeId) {
+        PlaceEntity place = placeRepository.findById(placeId)
+                .orElseThrow(() -> {
+                    log.error("Place not exists with id: [{}]", placeId);
+                    return new UnprocessableActionException("Место с названием не существует.");
+                });
+
+        if (!userId.toString().equals(place.getAuthor())) {
+            log.error("User is not author for place [{}]", placeId);
+            throw new UnprocessableActionException("У пользователя недостаточно прав для удаления места.");
+        }
+
+        placeRepository.delete(placeId);
+    }
 }

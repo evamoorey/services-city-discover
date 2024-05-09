@@ -79,4 +79,11 @@ public class PlaceRepositoryImpl implements PlaceRepository {
                 })
                 .into(PlaceEntity.class);
     }
+
+    @Override
+    public void delete(UUID id) {
+        dsl.deleteFrom(PLACE)
+                .where(PLACE.ID.eq(id))
+                .execute();
+    }
 }

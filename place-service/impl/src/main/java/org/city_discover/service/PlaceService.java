@@ -16,4 +16,6 @@ public interface PlaceService {
     Page<PlaceCardDto> findByUserId(UUID user, Pageable pageable);
 
     PlaceCardDto update(UUID id, PlaceCardUpdateDto dto, UUID user);
+
+    void delete(UUID userId, UUID id);
 }

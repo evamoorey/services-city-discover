@@ -17,4 +17,6 @@ public interface PlaceRepository {
     Page<PlaceEntity> findByUserId(UUID user, Pageable pageable);
 
     PlaceEntity update(PlaceEntity entity);
+
+    void delete(UUID id);
 }
