@@ -11,5 +11,6 @@ public class ControllerUrls {
 
     public static final String PLACE_PHOTO_URL = "/place/photo";
 
+    public static final String ADMIN_PLACE_URL = "/admin/place";
     public static final String ADMIN_PLACE_ID_URL = "/admin/place/{id}";
 }

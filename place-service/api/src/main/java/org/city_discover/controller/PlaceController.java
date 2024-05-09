@@ -53,9 +53,4 @@ public interface PlaceController {
     @Operation(summary = "Удалить карточку места пользователя")
     ResponseEntity<Boolean> delete(@Parameter(description = "ID карточки места")
                                    @PathVariable UUID id);
-
-    @DeleteMapping(path = ControllerUrls.ADMIN_PLACE_ID_URL)
-    @Operation(summary = "Удалить карточку места")
-    ResponseEntity<Boolean> deleteAdmin(@Parameter(description = "ID карточки места")
-                                        @PathVariable UUID id);
 }

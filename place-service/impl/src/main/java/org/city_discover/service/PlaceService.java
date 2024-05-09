@@ -9,7 +9,7 @@ import org.springframework.data.domain.Pageable;
 import java.util.UUID;
 
 public interface PlaceService {
-    PlaceCardDto create(UUID userId, PlaceCardCreateDto placeCardDto);
+    PlaceCardDto create(String userId, PlaceCardCreateDto placeCardDto);
 
     PlaceCardDto findById(UUID id);
 

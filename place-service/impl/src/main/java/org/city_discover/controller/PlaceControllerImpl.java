@@ -35,7 +35,7 @@ public class PlaceControllerImpl implements PlaceController {
         }
 
         UUID userId = UUID.fromString((String) request.getAttribute("id"));
-        PlaceCardDto placeCard = placeService.create(userId, placeCardDto);
+        PlaceCardDto placeCard = placeService.create(String.valueOf(userId), placeCardDto);
 
         return new ResponseEntity<>(placeCard, HttpStatus.OK);
     }
@@ -69,13 +69,6 @@ public class PlaceControllerImpl implements PlaceController {
     public ResponseEntity<Boolean> delete(UUID id) {
         UUID userId = UUID.fromString((String) request.getAttribute("id"));
         placeService.delete(userId, id);
-
-        return new ResponseEntity<>(true, HttpStatus.OK);
-    }
-
-    @Override
-    public ResponseEntity<Boolean> deleteAdmin(UUID id) {
-        placeService.deleteAdmin(id);
 
         return new ResponseEntity<>(true, HttpStatus.OK);
     }

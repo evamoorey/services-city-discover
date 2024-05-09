@@ -29,7 +29,7 @@ public class PlaceServiceImpl implements PlaceService {
     private final ModelMapper modelMapper;
 
     @Override
-    public PlaceCardDto create(UUID user, PlaceCardCreateDto placeCardDto) {
+    public PlaceCardDto create(String user, PlaceCardCreateDto placeCardDto) {
         Optional<PlaceEntity> place = placeRepository.findByName(placeCardDto.getName());
 
         if (place.isPresent()) {
@@ -39,7 +39,7 @@ public class PlaceServiceImpl implements PlaceService {
         }
 
         PlaceEntity entity = modelMapper.map(placeCardDto, PlaceEntity.class);
-        entity.setAuthor(String.valueOf(user));
+        entity.setAuthor(user);
 
         PlaceEntity created = placeRepository.insert(entity);
         return modelMapper.map(created, PlaceCardDto.class);
