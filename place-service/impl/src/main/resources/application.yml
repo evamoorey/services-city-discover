@@ -26,7 +26,7 @@ spring:
 
 jwt:
   secret: "uR2djMIlRYULTTvgMdQMFkil5Ecg3qauWYfVbw0jQyTYx0a1Lm2bW9"
-  admin-secret: "..."
+  admin-secret: "gVc85nCtlEWatZglm9kDNGOD"
 
 minio:
   minio-url: "http://minio:9000"
