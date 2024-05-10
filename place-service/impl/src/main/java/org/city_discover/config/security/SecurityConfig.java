@@ -30,7 +30,8 @@ public class SecurityConfig extends OncePerRequestFilter {
     );
 
     private static final Set<String> adminURI = Set.of(
-            "/place-service/admin"
+            "/place-service/admin",
+            "/place-service/place/photo"
     );
 
     private static final Set<String> swaggerURI = Set.of(
