@@ -35,4 +35,12 @@ public class TokenServiceImpl implements TokenService {
             throw new UnauthorizedException("Невозможно валидировать JWT token");
         }
     }
+
+    @Override
+    public void verifyAdmin(String authorization) {
+        if (!authorization.equals(jwtProperties.getAdminSecret())) {
+            log.error("User not admin");
+            throw new UnauthorizedException("Невозможно валидировать JWT token админа");
+        }
+    }
 }
