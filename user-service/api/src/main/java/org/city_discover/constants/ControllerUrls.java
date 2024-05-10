@@ -16,4 +16,6 @@ public class ControllerUrls {
     public static final String UNSUBSCRIBE_URL = "/unsubscribe/{id}";
     public static final String SUBSCRIPTIONS_URL = "/subscriptions/{id}";
     public static final String SUBSCRIBERS_URL = "/subscribers/{id}";
+
+    public static final String ADMIN_USER_ID_URL = "/admin/user/{id}";
 }

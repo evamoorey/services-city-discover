@@ -10,6 +10,8 @@ public interface TokenService {
 
     void verifyToken(String token);
 
+    void verifyAdmin(String authorization);
+
     TokenEntity findByUserId(UUID userId);
 
     void deleteByUserId(UUID userId);

@@ -35,6 +35,7 @@ spring:
 
 jwt:
   secret: "uR2djMIlRYULTTvgMdQMFkil5Ecg3qauWYfVbw0jQyTYx0a1Lm2bW9"
+  admin-secret: "gVc85nCtlEWatZglm9kDNGOD"
 
 recommendation:
   host: recommendation-service

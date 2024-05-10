@@ -31,6 +31,10 @@ public class SecurityConfig extends OncePerRequestFilter {
             "/user-service/auth/login",
             "/user-service/auth/refresh");
 
+    private static final Set<String> adminURI = Set.of(
+            "/place-service/admin"
+    );
+
     private static final Set<String> swaggerURI = Set.of(
             "/user-service/swagger-ui",
             "/user-service/v3/api-docs");
@@ -43,10 +47,14 @@ public class SecurityConfig extends OncePerRequestFilter {
     protected void doFilterInternal(@NotNull HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) {
         try {
             String authorization = request.getHeader("Authorization").replace("Bearer ", "");
-            tokenService.verifyToken(authorization);
 
-            Object userId = getUserFromToken(authorization);
-            request.setAttribute("id", userId);
+            if (adminURI.stream().anyMatch(request.getRequestURI()::contains)) {
+                tokenService.verifyAdmin(authorization);
+            } else {
+                tokenService.verifyToken(authorization);
+                Object userId = getUserFromToken(authorization);
+                request.setAttribute("id", userId);
+            }
 
             filterChain.doFilter(request, response);
         } catch (Exception e) {

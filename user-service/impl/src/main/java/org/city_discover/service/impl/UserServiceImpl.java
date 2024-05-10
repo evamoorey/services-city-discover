@@ -96,6 +96,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void delete(UUID userId) {
+        userRepository.findById(userId).orElseThrow(() -> {
+            log.error("No such user with id: [{}]", userId);
+            return new NoSuchEntityException("Пользователь не существует");
+        });
+
         userRepository.delete(userId);
     }
 

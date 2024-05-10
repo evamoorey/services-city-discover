@@ -76,6 +76,14 @@ public class TokenServiceImpl implements TokenService {
     }
 
     @Override
+    public void verifyAdmin(String authorization) {
+        if (!authorization.equals(jwtProperties.getAdminSecret())) {
+            log.error("User not admin");
+            throw new UnauthorizedException("Невозможно валидировать JWT token админа");
+        }
+    }
+
+    @Override
     public TokenEntity findByUserId(UUID userId) {
         return tokenRepository.findById(userId).orElseThrow(() -> {
             log.error("No such tokens for user: [{}]", userId);
