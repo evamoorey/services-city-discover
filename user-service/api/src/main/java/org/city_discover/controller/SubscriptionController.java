@@ -23,19 +23,22 @@ import java.util.UUID;
 public interface SubscriptionController {
 
     @PostMapping(path = ControllerUrls.SUBSCRIBE_URL)
-    @Operation(summary = "Подписать текущего пользователя на другого")
+    @Operation(summary = "Подписать текущего пользователя на другого",
+            description = "Подписаться на обновления пользователя")
     ResponseEntity<Boolean> subscribe(@Parameter(description = "ID пользователя издателя")
                                       @PathVariable UUID id);
 
     @PostMapping(path = ControllerUrls.UNSUBSCRIBE_URL)
-    @Operation(summary = "Отписать текущего пользователя от другого")
+    @Operation(summary = "Отписать текущего пользователя от другого",
+            description = "Отписаться от обновлений пользователя")
     ResponseEntity<Boolean> unsubscribe(@Parameter(description = "ID пользователя издателя")
                                         @PathVariable UUID id);
 
     @GetMapping(path = ControllerUrls.SUBSCRIBERS_URL)
     @Parameter(in = ParameterIn.QUERY, description = SwaggerDefaultInformation.PAGE_DESCRIPTION, name = SwaggerDefaultInformation.PAGE_NAME)
     @Parameter(in = ParameterIn.QUERY, description = SwaggerDefaultInformation.SIZE_DESCRIPTION, name = SwaggerDefaultInformation.SIZE_NAME)
-    @Operation(summary = "Получить подписчиков пользователя")
+    @Operation(summary = "Получить подписчиков пользователя",
+            description = "Получить всех, кто подписан на пользователя")
     ResponseEntity<Page<SubscriptionDto>> findSubscribers(@Parameter(description = "ID пользователя")
                                                           @PathVariable UUID id,
                                                           @Parameter(hidden = true)
@@ -44,7 +47,8 @@ public interface SubscriptionController {
     @GetMapping(path = ControllerUrls.SUBSCRIPTIONS_URL)
     @Parameter(in = ParameterIn.QUERY, description = SwaggerDefaultInformation.PAGE_DESCRIPTION, name = SwaggerDefaultInformation.PAGE_NAME)
     @Parameter(in = ParameterIn.QUERY, description = SwaggerDefaultInformation.SIZE_DESCRIPTION, name = SwaggerDefaultInformation.SIZE_NAME)
-    @Operation(summary = "Получить подписки пользователя")
+    @Operation(summary = "Получить подписки пользователя",
+            description = "Получить всех, на кого подписан пользователь")
     ResponseEntity<Page<SubscriptionDto>> findSubscriptions(@Parameter(description = "ID пользователя")
                                                             @PathVariable UUID id,
                                                             @Parameter(hidden = true)

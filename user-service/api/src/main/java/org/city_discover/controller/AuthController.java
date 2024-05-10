@@ -17,14 +17,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface AuthController {
 
     @PostMapping(path = ControllerUrls.LOGIN_CODE_URL)
-    @Operation(summary = "Отправка кода на почту")
+    @Operation(summary = "Отправка кода на почту", description = "Отправка одноразового кода для авторизации")
     ResponseEntity<?> sendCode(@RequestParam(value = "email") String email);
 
     @PostMapping(path = ControllerUrls.LOGIN_URL)
-    @Operation(summary = "Логин пользователя")
+    @Operation(summary = "Логин пользователя", description = "Авторизация пользователя по одноразовому коду")
     ResponseEntity<?> login(@RequestBody @Validated AuthCodeDto authCodeDto, BindingResult bindingResult);
 
     @GetMapping(path = ControllerUrls.REFRESH_URL)
-    @Operation(summary = "Рефреш токена")
+    @Operation(summary = "Refresh токена", description = "Выдача нового токена доступа в обмен на refresh токен")
     ResponseEntity<?> refresh(@RequestParam(value = "refresh") String refresh);
 }

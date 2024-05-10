@@ -16,7 +16,7 @@ import java.util.UUID;
 public interface AdminController {
 
     @DeleteMapping(path = ControllerUrls.ADMIN_USER_ID_URL)
-    @Operation(summary = "Удалить текущего пользователя")
+    @Operation(summary = "Удалить пользователя", description = "Удаление любого пользователя в системе")
     ResponseEntity<Boolean> delete(@Parameter(description = "ID пользователя")
                                    @PathVariable UUID id);
 }

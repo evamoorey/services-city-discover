@@ -24,27 +24,27 @@ import java.util.UUID;
 public interface UserController {
 
     @PostMapping(path = ControllerUrls.USER_URL)
-    @Operation(summary = "Обновить текущего пользователя")
+    @Operation(summary = "Обновить текущего пользователя", description = "Обновить текущего пользователя в соответствии с входящим дто")
     ResponseEntity<?> update(@RequestBody @Validated UserUpdateDto userUpdateDto,
                              BindingResult bindingResult);
 
     @GetMapping(path = ControllerUrls.USER_URL)
-    @Operation(summary = "Получить данные текущего пользователя")
+    @Operation(summary = "Получить данные текущего пользователя", description = "Получить всю информацию о текущем пользователе по токену доступа")
     ResponseEntity<UserDto> findInfo();
 
     @DeleteMapping(path = ControllerUrls.USER_URL)
-    @Operation(summary = "Удалить текущего пользователя")
+    @Operation(summary = "Удалить текущего пользователя", description = "Удалить пользователя по токену доступа")
     ResponseEntity<Boolean> delete();
 
     @GetMapping(path = ControllerUrls.USER_ID_URL)
-    @Operation(summary = "Получить пользователя")
+    @Operation(summary = "Получить пользователя", description = "Получить нечувствительные данные пользователя по id")
     ResponseEntity<UserPublicDto> findById(@Parameter(description = "ID пользователя")
                                            @PathVariable UUID id);
 
     @GetMapping(path = ControllerUrls.USERS_URL)
     @Parameter(in = ParameterIn.QUERY, description = SwaggerDefaultInformation.PAGE_DESCRIPTION, name = SwaggerDefaultInformation.PAGE_NAME)
     @Parameter(in = ParameterIn.QUERY, description = SwaggerDefaultInformation.SIZE_DESCRIPTION, name = SwaggerDefaultInformation.SIZE_NAME)
-    @Operation(summary = "Получить всех пользователей")
+    @Operation(summary = "Получить всех пользователей", description = "Получить нечувствительные данные пользователей с пагинацией и фильтрацией по имени")
     ResponseEntity<Page<UserPublicDto>> findAll(@Parameter(description = "Username пользователя")
                                                 @RequestParam(required = false) String username,
                                                 @Parameter(hidden = true)
