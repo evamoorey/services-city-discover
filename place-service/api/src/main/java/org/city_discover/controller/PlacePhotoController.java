@@ -13,15 +13,17 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.UUID;
 
-@Tag(name = "Фото карточек мест", description = "Контроллер для работы с фото мест" )
+@Tag(name = "Фото карточек мест", description = "Контроллер для работы с фото мест")
 public interface PlacePhotoController {
 
     @PostMapping(path = ControllerUrls.PLACE_PHOTO_URL, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @Operation(summary = "Загрузить фото места" )
-    ResponseEntity<UUID> upload(@RequestPart("file" ) MultipartFile file);
+    @Operation(summary = "Загрузить изображение места",
+            description = "Загрузить изображение места в формате MultipartFile")
+    ResponseEntity<UUID> upload(@RequestPart("file") MultipartFile file);
 
 
     @GetMapping(path = ControllerUrls.PLACE_PHOTO_URL)
-    @Operation(summary = "Скачать фото места" )
-    ResponseEntity<byte[]> download(@RequestParam(value = "fileId" ) UUID id);
+    @Operation(summary = "Скачать изображение места",
+            description = "Скачать изображение места в формате массива байт")
+    ResponseEntity<byte[]> download(@RequestParam(value = "fileId") UUID id);
 }

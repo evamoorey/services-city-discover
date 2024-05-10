@@ -24,33 +24,35 @@ import java.util.UUID;
 public interface PlaceController {
 
     @PostMapping(path = ControllerUrls.PLACE_URL)
-    @Operation(summary = "Создать карточку места")
+    @Operation(summary = "Создать карточку места", description = "Создание карточки места по входному дто")
     ResponseEntity<?> create(@RequestBody @Validated PlaceCardCreateDto placeCardDto,
                              BindingResult bindingResult);
 
     @GetMapping(path = ControllerUrls.PLACE_ID_URL)
-    @Operation(summary = "Получить карточку места")
+    @Operation(summary = "Получить карточку места", description = "Получить инфорамцию о месте по ID")
     ResponseEntity<PlaceCardDto> findById(@Parameter(description = "ID карточки места")
                                           @PathVariable UUID id);
 
     @GetMapping(path = ControllerUrls.PLACE_USER_ID_URL)
     @Parameter(in = ParameterIn.QUERY, description = SwaggerDefaultInformation.PAGE_DESCRIPTION, name = SwaggerDefaultInformation.PAGE_NAME)
     @Parameter(in = ParameterIn.QUERY, description = SwaggerDefaultInformation.SIZE_DESCRIPTION, name = SwaggerDefaultInformation.SIZE_NAME)
-    @Operation(summary = "Получить карточки мест пользователя")
+    @Operation(summary = "Получить карточки мест пользователя",
+            description = "Получить все места, созданные пользователем")
     ResponseEntity<Page<PlaceCardDto>> findByUserId(@Parameter(description = "ID пользователя")
                                                     @PathVariable UUID id,
                                                     @Parameter(hidden = true)
                                                     @PageableDefault(size = 100) Pageable pageable);
 
     @PostMapping(path = ControllerUrls.PLACE_ID_URL)
-    @Operation(summary = "Обновить карточку места")
+    @Operation(summary = "Обновить карточку места", description = "Обновить информацию о месте по входному дто")
     ResponseEntity<?> update(@Parameter(description = "ID карточки места")
                              @PathVariable UUID id,
                              @RequestBody PlaceCardUpdateDto placeCardDto,
                              BindingResult bindingResult);
 
     @DeleteMapping(path = ControllerUrls.PLACE_ID_URL)
-    @Operation(summary = "Удалить карточку места пользователя")
+    @Operation(summary = "Удалить карточку места пользователя",
+            description = "Удалить карточку места текущего пользователя")
     ResponseEntity<Boolean> delete(@Parameter(description = "ID карточки места")
                                    @PathVariable UUID id);
 }

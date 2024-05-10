@@ -20,12 +20,12 @@ import java.util.UUID;
 public interface AdminController {
 
     @PostMapping(path = ControllerUrls.ADMIN_PLACE_URL)
-    @Operation(summary = "Создать карточку места")
+    @Operation(summary = "Создать карточку места", description = "Создать карточку места системно")
     ResponseEntity<?> create(@RequestBody @Validated PlaceCardCreateDto placeCardDto,
                              BindingResult bindingResult);
 
     @DeleteMapping(path = ControllerUrls.ADMIN_PLACE_ID_URL)
-    @Operation(summary = "Удалить карточку места")
+    @Operation(summary = "Удалить карточку места", description = "Удалить любую карточку места по ID")
     ResponseEntity<Boolean> delete(@Parameter(description = "ID карточки места")
                                    @PathVariable UUID id);
 }
