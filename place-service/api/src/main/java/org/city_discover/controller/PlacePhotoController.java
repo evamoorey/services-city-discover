@@ -13,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.UUID;
 
-@Tag(name = "Фото карточек мест", description = "Контроллер для работы с фото мест")
+@Tag(name = "Изображения карточек мест", description = "Контроллер для работы с изображениями мест")
 public interface PlacePhotoController {
 
     @PostMapping(path = ControllerUrls.PLACE_PHOTO_URL, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
