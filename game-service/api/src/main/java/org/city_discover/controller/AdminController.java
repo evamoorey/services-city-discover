@@ -20,26 +20,28 @@ import java.util.UUID;
 public interface AdminController {
 
     @PostMapping(path = ControllerUrls.ADMIN_KITTY_URL)
-    @Operation(summary = "Создать кота")
+    @Operation(summary = "Создать персонажа", description = "Создать нового игрового персонажа")
     ResponseEntity<KittyDto> createKitty(@RequestBody @Validated KittyCreateDto kittyCreateDto,
                                          BindingResult bindingResult);
 
     @PostMapping(path = ControllerUrls.ADMIN_KITTY_OWNER_URL)
-    @Operation(summary = "Выдать кота пользователю")
+    @Operation(summary = "Выдать персонажа пользователю",
+            description = "Выдать игрового персонажа любому пользователю по ID")
     ResponseEntity<Boolean> giveKitty(@Parameter(description = "ID пользователя")
                                       @RequestParam UUID id,
-                                      @Parameter(description = "ID кота")
+                                      @Parameter(description = "ID игрового персонажа")
                                       @RequestParam UUID kitty);
 
     @DeleteMapping(path = ControllerUrls.ADMIN_KITTY_OWNER_URL)
-    @Operation(summary = "Забрать кота у пользователя")
+    @Operation(summary = "Забрать персонажа у пользователя",
+            description = "Удалить игрового персонажа у пользователя по ID")
     ResponseEntity<Boolean> deleteUserKitty(@Parameter(description = "ID пользователя")
                                             @RequestParam UUID id,
-                                            @Parameter(description = "ID кота")
+                                            @Parameter(description = "ID игрового персонажа")
                                             @RequestParam UUID kitty);
 
     @DeleteMapping(path = ControllerUrls.ADMIN_KITTY_URL)
-    @Operation(summary = "Удалить кота из системы")
-    ResponseEntity<Boolean> deleteKitty(@Parameter(description = "ID кота")
+    @Operation(summary = "Удалить персонажа", description = "Удалить игрового персонажа из системы")
+    ResponseEntity<Boolean> deleteKitty(@Parameter(description = "ID игрового персонажа")
                                         @RequestParam UUID kitty);
 }

@@ -20,10 +20,10 @@ public interface KittyController {
     @GetMapping(path = ControllerUrls.KITTY_URL)
     @Parameter(in = ParameterIn.QUERY, description = SwaggerDefaultInformation.PAGE_DESCRIPTION, name = SwaggerDefaultInformation.PAGE_NAME)
     @Parameter(in = ParameterIn.QUERY, description = SwaggerDefaultInformation.SIZE_DESCRIPTION, name = SwaggerDefaultInformation.SIZE_NAME)
-    @Operation(summary = "Получить котов пользователя")
-    ResponseEntity<Page<KittyDto>> findNear(@Parameter(description = "Широта нахождения кота")
+    @Operation(summary = "Получить персонажей поблизости", description = "Получить персонажей, находящихся близко к координатам")
+    ResponseEntity<Page<KittyDto>> findNear(@Parameter(description = "Широта нахождения персонажа")
                                             @RequestParam Double latitude,
-                                            @Parameter(description = "Долгота нахождения кота")
+                                            @Parameter(description = "Долгота нахождения персонажа")
                                             @RequestParam Double longitude,
                                             @Parameter(hidden = true)
                                             @PageableDefault(size = 100) Pageable pageable);

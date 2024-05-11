@@ -12,15 +12,16 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.UUID;
-@Tag(name = "Фото игровых персонажей", description = "Контроллер для работы с фото персонажей" )
+
+@Tag(name = "Изображения игровых персонажей", description = "Контроллер для работы с фото персонажей")
 public interface KittyPhotoController {
 
     @PostMapping(path = ControllerUrls.KITTY_PHOTO_URL, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @Operation(summary = "Загрузить фото места" )
-    ResponseEntity<UUID> upload(@RequestPart("file" ) MultipartFile file);
+    @Operation(summary = "Загрузить изображение", description = "Загрузить в хранилище изображение игрового персонажа")
+    ResponseEntity<UUID> upload(@RequestPart("file") MultipartFile file);
 
 
     @GetMapping(path = ControllerUrls.KITTY_PHOTO_URL)
-    @Operation(summary = "Скачать фото места" )
-    ResponseEntity<byte[]> upload(@RequestParam(value = "fileId" ) UUID id);
+    @Operation(summary = "Скачать изображение", description = "Скачать из хранилища изображение игрового персонажа")
+    ResponseEntity<byte[]> upload(@RequestParam(value = "fileId") UUID id);
 }

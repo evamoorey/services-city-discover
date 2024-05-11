@@ -24,15 +24,15 @@ public interface OwnerController {
     @GetMapping(path = ControllerUrls.KITTY_OWNER_ID_URL)
     @Parameter(in = ParameterIn.QUERY, description = SwaggerDefaultInformation.PAGE_DESCRIPTION, name = SwaggerDefaultInformation.PAGE_NAME)
     @Parameter(in = ParameterIn.QUERY, description = SwaggerDefaultInformation.SIZE_DESCRIPTION, name = SwaggerDefaultInformation.SIZE_NAME)
-    @Operation(summary = "Получить котов пользователя")
+    @Operation(summary = "Получить персонажей пользователя", description = "Получить персонажей пользователя по его ID")
     ResponseEntity<Page<KittyDto>> findByOwnerId(@Parameter(description = "ID пользователя")
                                                  @PathVariable UUID id,
                                                  @Parameter(hidden = true)
                                                  @PageableDefault(size = 100) Pageable pageable);
 
     @PostMapping(path = ControllerUrls.KITTY_OWNER_URL)
-    @Operation(summary = "Выдать кота пользователю")
-    ResponseEntity<Boolean> giveKitty(@Parameter(description = "ID кота")
+    @Operation(summary = "Выдать игрового персонажа пользователю", description = "Выдать текущему пользователю игрового персонажа")
+    ResponseEntity<Boolean> giveKitty(@Parameter(description = "ID игрового персонажа")
                                       @RequestParam UUID kitty);
 
 }
