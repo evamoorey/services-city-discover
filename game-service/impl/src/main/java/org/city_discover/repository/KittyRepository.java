@@ -9,7 +9,7 @@ import java.util.UUID;
 public interface KittyRepository {
     KittyEntity insert(KittyEntity entity);
 
-    Page<KittyEntity> findNear(Double latitude, Double longitude, Pageable pageable);
+    Page<KittyEntity> findNear300(Double latitude, Double longitude, Pageable pageable);
 
     void delete(UUID kitty);
 }

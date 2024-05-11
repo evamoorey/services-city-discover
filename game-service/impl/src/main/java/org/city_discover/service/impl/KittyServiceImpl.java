@@ -32,7 +32,7 @@ public class KittyServiceImpl implements KittyService {
 
     @Override
     public Page<KittyDto> findNear(Double latitude, Double longitude, Pageable pageable) {
-        return repository.findNear(latitude, longitude, pageable)
+        return repository.findNear300(latitude, longitude, pageable)
                 .map(kitty -> modelMapper.map(kitty, KittyDto.class));
     }
 

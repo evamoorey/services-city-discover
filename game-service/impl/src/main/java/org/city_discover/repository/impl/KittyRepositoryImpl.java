@@ -23,6 +23,9 @@ public class KittyRepositoryImpl implements KittyRepository {
 
     private final DSLContext dsl;
 
+    private final Double DIF_LONG = 0.00138889;
+    private final Double DIF_LAT = 0.00239667;
+
     @Override
     public KittyEntity insert(KittyEntity entity) {
         return dsl.insertInto(KITTY)
@@ -38,10 +41,10 @@ public class KittyRepositoryImpl implements KittyRepository {
     }
 
     @Override
-    public Page<KittyEntity> findNear(Double latitude, Double longitude, Pageable pageable) {
+    public Page<KittyEntity> findNear300(Double latitude, Double longitude, Pageable pageable) {
         List<KittyEntity> data = dsl.selectFrom(KITTY)
-                .where(KITTY.LATITUDE.eq(latitude))
-                .and(KITTY.LONGITUDE.eq(longitude))
+                .where(KITTY.LATITUDE.between(latitude - DIF_LAT, latitude + DIF_LAT))
+                .and(KITTY.LONGITUDE.between(longitude - DIF_LONG, longitude + DIF_LONG))
                 .limit(pageable.getPageSize())
                 .offset(pageable.getOffset())
                 .fetchInto(KittyEntity.class);
