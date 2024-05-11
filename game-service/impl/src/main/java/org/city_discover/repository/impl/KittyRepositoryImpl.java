@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.UUID;
 
 import static org.city_discover.domain.jooq.tables.Kitty.KITTY;
 
@@ -49,5 +50,12 @@ public class KittyRepositoryImpl implements KittyRepository {
                 .where(KITTY.LATITUDE.eq(latitude))
                 .and(KITTY.LONGITUDE.eq(longitude)));
         return new PageImpl<>(data, pageable, total);
+    }
+
+    @Override
+    public void delete(UUID kitty) {
+        dsl.deleteFrom(KITTY)
+                .where(KITTY.ID.eq(kitty))
+                .execute();
     }
 }

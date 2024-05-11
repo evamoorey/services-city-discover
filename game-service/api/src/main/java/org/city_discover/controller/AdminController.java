@@ -5,7 +5,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.city_discover.constant.ControllerUrls;
 import org.city_discover.dto.KittyCreateDto;
-import org.city_discover.dto.KittyDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -21,8 +20,8 @@ public interface AdminController {
 
     @PostMapping(path = ControllerUrls.ADMIN_KITTY_URL)
     @Operation(summary = "Создать персонажа", description = "Создать нового игрового персонажа")
-    ResponseEntity<KittyDto> createKitty(@RequestBody @Validated KittyCreateDto kittyCreateDto,
-                                         BindingResult bindingResult);
+    ResponseEntity<?> createKitty(@RequestBody @Validated KittyCreateDto kittyCreateDto,
+                                  BindingResult bindingResult);
 
     @PostMapping(path = ControllerUrls.ADMIN_KITTY_OWNER_URL)
     @Operation(summary = "Выдать персонажа пользователю",

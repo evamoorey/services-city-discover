@@ -13,5 +13,9 @@ public interface OwnerRepository {
 
     Page<KittyEntity> findByOwnerId(UUID user, Pageable pageable);
 
-    Optional<KittyEntity> findByOwnerKitty(UUID user, UUID kitty);
+    Optional<OwnerEntity> findOwnerKitty(UUID user, UUID kitty);
+
+    void delete(UUID user, UUID kitty);
+
+    void deleteForAll(UUID kitty);
 }

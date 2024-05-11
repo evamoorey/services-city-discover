@@ -3,7 +3,6 @@ package org.city_discover.service.impl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.city_discover.dto.KittyDto;
-import org.city_discover.entity.KittyEntity;
 import org.city_discover.entity.OwnerEntity;
 import org.city_discover.exception.UnprocessableActionException;
 import org.city_discover.repository.OwnerRepository;
@@ -28,10 +27,10 @@ public class OwnerServiceImpl implements OwnerService {
     @Override
     @Transactional
     public void giveKitty(UUID user, UUID kitty) {
-        Optional<KittyEntity> kittyEntity = repository.findByOwnerKitty(user, kitty);
+        Optional<OwnerEntity> ownerEntity = repository.findOwnerKitty(user, kitty);
 
-        if (kittyEntity.isPresent()) {
-            log.error("User [{}] already has a kitty [{}]", user, kitty);
+        if (ownerEntity.isPresent()) {
+            log.error("User [{}] already have a kitty [{}]", user, kitty);
             throw new UnprocessableActionException("Котенок уже есть в коллекции");
         }
 
@@ -43,5 +42,15 @@ public class OwnerServiceImpl implements OwnerService {
     public Page<KittyDto> findByOwnerId(UUID user, Pageable pageable) {
         return repository.findByOwnerId(user, pageable)
                 .map(kitty -> modelMapper.map(kitty, KittyDto.class));
+    }
+
+    @Override
+    public void deleteKitty(UUID user, UUID kitty) {
+        repository.delete(user, kitty);
+    }
+
+    @Override
+    public void deleteKittyForAllUsers(UUID kitty) {
+        repository.deleteForAll(kitty);
     }
 }

@@ -72,7 +72,25 @@ public class OwnerRepositoryImpl implements OwnerRepository {
     }
 
     @Override
-    public Optional<KittyEntity> findByOwnerKitty(UUID user, UUID kitty) {
-        return Optional.empty();
+    public Optional<OwnerEntity> findOwnerKitty(UUID user, UUID kitty) {
+        return dsl.selectFrom(OWNER)
+                .where(OWNER.OWNER_ID.eq(user))
+                .and(OWNER.KITTY_ID.eq(kitty))
+                .fetchOptionalInto(OwnerEntity.class);
+    }
+
+    @Override
+    public void delete(UUID user, UUID kitty) {
+        dsl.deleteFrom(OWNER)
+                .where(OWNER.OWNER_ID.eq(user))
+                .and(OWNER.KITTY_ID.eq(kitty))
+                .execute();
+    }
+
+    @Override
+    public void deleteForAll(UUID kitty) {
+        dsl.deleteFrom(OWNER)
+                .where(OWNER.KITTY_ID.eq(kitty))
+                .execute();
     }
 }

@@ -11,4 +11,7 @@ public interface OwnerService {
 
     Page<KittyDto> findByOwnerId(UUID user, Pageable pageable);
 
+    void deleteKitty(UUID user, UUID kitty);
+
+    void deleteKittyForAllUsers(UUID kitty);
 }
