@@ -79,6 +79,8 @@ def cold_start_recommendations(user_id, num, user_location):
 
     return places
 
+
+
 def get_recommendations(user_id, offset, limit, num, user_location):
     """
     Generates personalized recommendations for a user.
@@ -149,7 +151,10 @@ def get_recommendations(user_id, offset, limit, num, user_location):
 
     predictions = catboost_model.predict_proba(X_infer_with_embeddings)[:, 1]
 
-    X_infer['probability'] = predictions
+
+    reversed_proba = predictions
+    X_infer['probability'] = (1 - reversed_proba) * 100
+
     X_infer_sorted = X_infer.sort_values(by='probability', ascending=False)
 
     end_index = min(offset + num, limit)
@@ -162,6 +167,8 @@ def get_recommendations(user_id, offset, limit, num, user_location):
 
     if not top_n_recommendations.empty:
         places = database.get_places_by_ids(list(top_n_recommendations['place_id']))
+        for i, place in enumerate(places):
+            place['probability'] = round(top_n_recommendations.iloc[i]['probability'], 2)
         return places
     else:
         return {"error": f"No places found for user {user_id}"}
