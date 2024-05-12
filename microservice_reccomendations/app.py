@@ -169,7 +169,25 @@ def rate_place():
     else:
         return jsonify({"error": "Failed to add rating"}), 500
 
+@app.route('/add_user_place', methods=['POST'])
+def add_user_place():
+    """
+    Endpoint for adding a user-defined place.
+    """
+    place_data = request.get_json()
+    if not place_data:
+        return jsonify({"error": "No data provided"}), 400
 
+    required_fields = ["category_id", "subcategory_id", "name", "address", "rating", "image", "description", "reviews_count", "pos1", "pos2"]
+    if not all(field in place_data for field in required_fields):
+        return jsonify({"error": "Missing one or more required fields"}), 400
+
+    # Вызов функции добавления места из database.py
+    success = database.add_place(place_data)
+    if success:
+        return jsonify({"success": "Place added successfully"}), 201
+    else:
+        return jsonify({"error": "Failed to add place"}), 500
 
 @app.route('/view_place', methods=['POST'])
 def view_place():
