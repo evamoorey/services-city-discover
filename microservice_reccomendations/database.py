@@ -106,6 +106,7 @@ def create_tables(db_path='places.db'):
     );''')
 
     # Обновляем таблицу мест
+    # Создаем таблицу Places с новым полем
     cur.execute('''
     CREATE TABLE IF NOT EXISTS Places (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -119,12 +120,14 @@ def create_tables(db_path='places.db'):
         reviews_count INTEGER,
         pos1 REAL,
         pos2 REAL,
+        places_from_user BOOLEAN DEFAULT FALSE,
         FOREIGN KEY (category_id) REFERENCES Categories(id),
         FOREIGN KEY (subcategory_id) REFERENCES Subcategories(id)
     );''')
 
 
-    # Обновляем таблицу предпочтений
+
+# Обновляем таблицу предпочтений
     cur.execute('''
     CREATE TABLE IF NOT EXISTS Preferences (
     user_id INTEGER,
@@ -754,7 +757,74 @@ def add_user_view(user_id, place_id):
         if conn:
             conn.close()
 
+def add_place(place_data, db_path='places.db'):
+    """
+    Adds a new place to the Places table with a flag indicating it is user-provided.
 
+    Args:
+    place_data (dict): A dictionary containing all necessary data for the place.
+    db_path (str): Path to the database file.
+
+    Returns:
+    bool: True if the operation is successful, False otherwise.
+    """
+    try:
+        conn = sqlite3.connect(db_path)
+        cur = conn.cursor()
+
+        cur.execute("""
+            INSERT INTO Places (category_id, subcategory_id, name, address, rating, image, description, reviews_count, pos1, pos2, places_from_user)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """, (
+            place_data["category_id"],
+            place_data["subcategory_id"],
+            place_data["name"],
+            place_data["address"],
+            place_data.get("rating", None),  # Позволяет rating быть None
+            place_data["image"],
+            place_data["description"],
+            place_data["reviews_count"],
+            place_data["pos1"],
+            place_data["pos2"],
+            True  # Установка places_from_user в True
+        ))
+
+        conn.commit()
+        return True
+    except Exception as e:
+        print(f"Error adding new place: {e}")
+        return False
+    finally:
+        if conn:
+            conn.close()
+
+
+def update_places_with_new_field(db_path='places.db'):
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+
+    # Проверка на наличие столбца 'places_from_user'
+    cur.execute("PRAGMA table_info(Places)")
+    columns_info = cur.fetchall()
+    if 'places_from_user' not in [col[1] for col in columns_info]:
+        # Если столбец отсутствует, добавляем его
+        cur.execute("ALTER TABLE Places ADD COLUMN places_from_user BOOLEAN DEFAULT FALSE")
+
+    cur.execute("UPDATE Places SET places_from_user = ?", (False,))
+    conn.commit()
+    conn.close()
+
+
+# def update_places_with_new_field(db_path='places.db'):
+#     conn = sqlite3.connect(db_path)
+#     cur = conn.cursor()
+#     cur.execute("UPDATE Places SET places_from_user = ?", (False,))
+#     conn.commit()
+#     conn.close()
+
+# update_places_with_new_field()
+# create_tables(db_path='places.db')
+# update_places_with_new_field()
 
 # data = get_all_places()
 #
