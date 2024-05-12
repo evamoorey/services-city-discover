@@ -715,7 +715,7 @@ def add_user_rating(user_id, place_id, rating):
         cur = conn.cursor()
 
         cur.execute('''
-            INSERT INTO UserRatings (user_id, place_id, rating)
+            INSERT INTO Visits (user_id, place_id, user_rating)
             VALUES (?, ?, ?)
         ''', (user_id, place_id, rating))
 
