@@ -4,6 +4,7 @@ import jakarta.mail.*;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import lombok.AllArgsConstructor;
+import org.city_discover.exception.UnprocessableActionException;
 import org.city_discover.properties.SenderProperties;
 import org.city_discover.service.EmailService;
 import org.springframework.stereotype.Service;
@@ -42,7 +43,7 @@ public class EmailServiceImpl implements EmailService {
 
             Transport.send(message, message.getAllRecipients());
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new UnprocessableActionException("Ошибка при отправке кода авторизации: " + e.getMessage());
         }
     }
 }
