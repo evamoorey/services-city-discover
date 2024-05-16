@@ -46,7 +46,7 @@ public class UserServiceImpl implements UserService {
                 .build();
 
         UserEntity inserted = userRepository.insert(newUser);
-        return modelMapper.map(inserted, UserDto.class);
+        return mapUserEntityToUserDto(inserted);
     }
 
     @Override

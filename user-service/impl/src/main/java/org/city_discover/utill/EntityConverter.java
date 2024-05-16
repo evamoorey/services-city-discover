@@ -19,6 +19,10 @@ public class EntityConverter {
     public static UserDto mapUserEntityToUserDto(UserEntity user) {
         UserDto dto = modelMapper.map(user, UserDto.class);
 
+        if (user.getPreferences() == null || user.getPreferences().isEmpty()) {
+            return dto;
+        }
+
         try {
             dto.setPreferences(objectMapper.readValue(user.getPreferences(), new TypeReference<>() {
             }));
