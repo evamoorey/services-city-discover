@@ -10,6 +10,7 @@ import org.city_discover.exception.NoSuchEntityException;
 import org.city_discover.exception.NotUniqueException;
 import org.city_discover.repository.UserRepository;
 import org.city_discover.service.RecommendationExternalService;
+import org.city_discover.service.TokenService;
 import org.city_discover.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -29,6 +30,8 @@ import static org.city_discover.utill.EntityConverter.mapUserUpdateDtoToUserEnti
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final TokenService tokenService;
+
     private final ModelMapper modelMapper;
     private final RecommendationExternalService recommendationExternalService;
 
@@ -96,6 +99,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void delete(UUID userId) {
+        tokenService.deleteByUserId(userId);
+
         userRepository.findById(userId).orElseThrow(() -> {
             log.error("No such user with id: [{}]", userId);
             return new NoSuchEntityException("Пользователь не существует");
