@@ -216,18 +216,33 @@ def view_place():
 
     Expected request format:
     {
-      "user_id": 1,
       "place_id": 123
     }
+
+    Headers:
+        - Authorization (str): JWT token containing user information.
 
     Returns:
         JSON response indicating success or an error message with HTTP status code.
     """
     data = request.json
-    if not data or 'user_id' not in data or 'place_id' not in data:
+    if not data or 'place_id' not in data:
         return jsonify({"error": "Missing data"}), 400
 
-    user_id = data['user_id']
+    token = request.headers.get('Authorization')
+
+    if token is None:
+        return jsonify({'error': 'Missing JWT token'}), 400
+
+    try:
+        secret_key = 'uR2djMIlRYULTTvgMdQMFkil5Ecg3qauWYfVbw0jQyTYx0a1Lm2bW9'
+        decoded_token = jwt.decode(token, secret_key, algorithms=['HS256'])
+        user_id = decoded_token['user_id']
+    except jwt.ExpiredSignatureError:
+        return jsonify({'error': 'JWT token has expired'}), 401
+    except jwt.InvalidTokenError:
+        return jsonify({'error': 'Invalid JWT token'}), 401
+
     place_id = data['place_id']
 
     if database.add_user_view(user_id, place_id):
