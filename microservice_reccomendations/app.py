@@ -2,7 +2,6 @@ from flask import Flask, jsonify, request
 import database
 import modeling
 import jwt
-import base64
 
 app = Flask(__name__)
 
