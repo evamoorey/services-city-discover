@@ -1,8 +1,11 @@
 from flask import Flask, jsonify, request
 import database
 import modeling
+import jwt
+import base64
 
 app = Flask(__name__)
+
 
 @app.route('/get_model_recommendations', methods=['GET'])
 def model_recommendations():
@@ -13,8 +16,10 @@ def model_recommendations():
         - offset (int): Offset for pagination. Default is 0.
         - limit (int): Maximum number of recommendations to return. Default is 1000.
         - num (int): Number of recommendations to return. Default is 20.
-        - user_id (str): ID of the user. Default is 'user_id_123123123123'.
         - p (str): User's location in the format "latitude,longitude". Default is None.
+
+    Headers:
+        - Authorization (str): JWT token containing user information.
 
     Returns:
         JSON response containing the recommendations or an error message with HTTP status code.
@@ -22,8 +27,22 @@ def model_recommendations():
     offset = request.args.get('offset', default=0, type=int)
     limit = request.args.get('limit', default=1000, type=int)
     num = request.args.get('num', default=20, type=int)
-    user_id = request.args.get('user_id', default='user_id_123123123123', type=str)
     user_location = request.args.get('p', default=None, type=str)
+
+    token = request.headers.get('Authorization')
+
+    if token is None:
+        return jsonify({'error': 'Missing JWT token'}), 400
+
+    try:
+        secret_key = 'uR2djMIlRYULTTvgMdQMFkil5Ecg3qauWYfVbw0jQyTYx0a1Lm2bW9'
+        decoded_token = jwt.decode(token, secret_key, algorithms=['HS256'])
+        user_id = decoded_token['user_id']
+        print(user_id)
+    except jwt.ExpiredSignatureError:
+        return jsonify({'error': 'JWT token has expired'}), 401
+    except jwt.InvalidTokenError:
+        return jsonify({'error': 'Invalid JWT token'}), 401
 
     recommendations = modeling.get_recommendations(user_id, offset, limit, num, user_location)
 
@@ -31,6 +50,8 @@ def model_recommendations():
         return recommendations
     else:
         return jsonify(recommendations)
+
+
 
 @app.route('/categories', methods=['GET'])
 def categories():
