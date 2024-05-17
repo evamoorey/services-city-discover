@@ -6,4 +6,4 @@ catboost
 numpy
 scikit-learn
 geopy
-
+jwt
