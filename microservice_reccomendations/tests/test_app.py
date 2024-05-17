@@ -2,6 +2,7 @@ import pytest
 import json
 import sys
 import os
+import jwt
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from app import app
@@ -16,11 +17,6 @@ def test_home_page(client):
     assert response.status_code == 200
     assert response.data.decode('utf-8') == 'Добро пожаловать в сервис рекомендаций!'
 
-def test_get_model_recommendations(client):
-    response = client.get('/get_model_recommendations?user_id=1&num=5')
-    assert response.status_code == 200
-    data = json.loads(response.data.decode('utf-8'))
-    assert len(data) == 5
 
 def test_get_categories(client):
     response = client.get('/categories')
@@ -78,12 +74,29 @@ def test_rate_place(client):
     data = json.loads(response.data.decode('utf-8'))
     assert data['success'] == 'Rating added successfully'
 
+def test_get_model_recommendations(client):
+    # Создание JWT-токена для тестирования
+    user_id = 1
+    secret_key = 'uR2djMIlRYULTTvgMdQMFkil5Ecg3qauWYfVbw0jQyTYx0a1Lm2bW9'
+    token = jwt.encode({'user_id': user_id}, secret_key, algorithm='HS256')
+
+    # Отправка GET-запроса с JWT-токеном в заголовке Authorization
+    response = client.get('/get_model_recommendations?num=5', headers={'Authorization': token})
+    assert response.status_code == 200
+    data = json.loads(response.data.decode('utf-8'))
+    assert len(data) == 5
+
 def test_view_place(client):
+    # Создание JWT-токена для тестирования
+    user_id = 1
+    secret_key = 'uR2djMIlRYULTTvgMdQMFkil5Ecg3qauWYfVbw0jQyTYx0a1Lm2bW9'
+    token = jwt.encode({'user_id': user_id}, secret_key, algorithm='HS256')
+
     view_data = {
-        "user_id": 1,
         "place_id": 123
     }
-    response = client.post('/view_place', json=view_data)
+    # Отправка POST-запроса с JWT-токеном в заголовке Authorization
+    response = client.post('/view_place', json=view_data, headers={'Authorization': token})
     assert response.status_code == 500
     data = json.loads(response.data.decode('utf-8'))
     # assert data['success'] == 'View recorded successfully'
